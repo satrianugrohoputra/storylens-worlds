@@ -16,7 +16,7 @@ const chapters = [
       "Welcome to StoryLens 3D, where every chapter comes alive.",
       "Scroll to advance through narrative and interactive 3D scenes combined.",
     ],
-    modelUrl: "/src/assets/models/sample-cube.glb",
+    variant: "cube" as const,
     bgColor: "bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-700",
   },
   {
@@ -26,7 +26,7 @@ const chapters = [
       "3D objects break out of the flat page. Rotate and zoom to explore.",
       "Each model is here for you—no two stories look the same.",
     ],
-    modelUrl: "/src/assets/models/sample-cube.glb",
+    variant: "sphere" as const,
     bgColor: "bg-gradient-to-r from-fuchsia-900 via-indigo-900 to-indigo-700",
     reverse: true,
   },
@@ -37,7 +37,7 @@ const chapters = [
       "Scroll triggers scene changes: backgrounds, animations, and text morph as you navigate.",
       "Try clicking chapter dots for instant jumps.",
     ],
-    modelUrl: "/src/assets/models/sample-cube.glb",
+    variant: "torus" as const,
     bgColor: "bg-gradient-to-r from-indigo-900 via-cyan-900 to-indigo-900",
   },
   {
@@ -47,7 +47,7 @@ const chapters = [
       "StoryLens 3D is now open-source. Replace models and chapters to make your own.",
       "Scroll once more, and let your story unfold.",
     ],
-    modelUrl: "/src/assets/models/sample-cube.glb",
+    variant: "cube" as const,
     bgColor: "bg-gradient-to-r from-gray-900 via-indigo-800 to-blue-900",
     reverse: true,
   }

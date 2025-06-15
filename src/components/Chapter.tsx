@@ -7,7 +7,7 @@ type ChapterProps = {
   id: string;
   title: string;
   content: string[];
-  modelUrl: string;
+  variant: "cube" | "sphere" | "torus";
   bgColor: string;
   reverse?: boolean;
 };
@@ -17,7 +17,7 @@ const typewriterVariants = {
   visible: { opacity: 1, y: 0 }
 };
 
-export const Chapter: React.FC<ChapterProps> = ({ id, title, content, modelUrl, bgColor, reverse }) => {
+export const Chapter: React.FC<ChapterProps> = ({ id, title, content, variant, bgColor, reverse }) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { amount: 0.4, once: true });
   const [typedLines, setTypedLines] = useState(0);
@@ -84,7 +84,7 @@ export const Chapter: React.FC<ChapterProps> = ({ id, title, content, modelUrl, 
         animate={show3D ? { opacity: 1, y: 0, scale: 1 } : {}}
         transition={{ delay: 0.2, duration: 0.8, type: "spring" }}
       >
-        {show3D && <ModelViewer modelUrl={modelUrl} hint />}
+        {show3D && <ModelViewer variant={variant} />}
       </motion.div>
     </section>
   );
