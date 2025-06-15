@@ -1,3 +1,4 @@
+
 import React from "react";
 import { MainNavbar } from "../components/MainNavbar";
 import { CosmicMap } from "../components/CosmicMap";
@@ -6,10 +7,6 @@ export default function CosmicCompass() {
   console.log("CosmicCompass page mounted");
   return (
     <div className="min-h-screen bg-black relative pb-10">
-      {/* DEBUG: If you see this text, the page is rendering! */}
-      <div className="fixed top-2 left-2 bg-yellow-200 text-black px-3 py-1 rounded shadow-lg z-50 font-bold">
-        Debug: CosmicCompass page is mounting.
-      </div>
       <MainNavbar />
       <div className="flex flex-col items-center w-full pt-28 pb-10">
         <div className="mb-2">
