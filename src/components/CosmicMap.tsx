@@ -5,6 +5,8 @@ import { Check } from "lucide-react";
 // World map background PNG
 const MAP_IMAGE =
   "https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png";
+// Fallback: Lovable local upload (screenshot or you can replace with a public-sourced world map)
+const MAP_IMAGE_FALLBACK = "/lovable-uploads/34c9d984-e39f-4777-a8c0-56e7da40df88.png";
 
 // Map dimensions in px (equirectangular projection)
 const MAP_W = 1920, MAP_H = 958;
@@ -84,6 +86,10 @@ export const CosmicMap: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState({ w: MAP_W, h: MAP_H });
 
+  // For tracking which map image to display (remote or fallback)
+  const [imgSrc, setImgSrc] = useState<string>(MAP_IMAGE);
+  const [imageError, setImageError] = useState<boolean>(false);
+
   // Track container size (for responsive marker positions)
   useLayoutEffect(() => {
     function update() {
@@ -127,20 +133,34 @@ export const CosmicMap: React.FC = () => {
     >
       {/* World map image fills the container */}
       <div className="absolute inset-0 w-full h-full z-0">
-        <img
-          src={MAP_IMAGE}
-          alt="World Map"
-          className="w-full h-full object-cover object-center select-none"
-          draggable={false}
-          style={{
-            filter: "brightness(1.12) saturate(1.16) contrast(1.08)",
-            pointerEvents: "none",
-            width: "100%",
-            height: "100%",
-            // Prevent draggable ghost images on mobile
-            userSelect: "none",
-          }}
-        />
+        {!imageError ? (
+          <img
+            src={imgSrc}
+            alt="World Map"
+            className="w-full h-full object-cover object-center select-none"
+            draggable={false}
+            style={{
+              filter: "brightness(1.12) saturate(1.16) contrast(1.08)",
+              pointerEvents: "none",
+              width: "100%",
+              height: "100%",
+              userSelect: "none",
+            }}
+            onError={() => {
+              if (imgSrc !== MAP_IMAGE_FALLBACK) {
+                setImgSrc(MAP_IMAGE_FALLBACK);
+              } else {
+                setImageError(true);
+              }
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-950 via-indigo-800 to-slate-800">
+            <span className="text-indigo-200 text-lg opacity-50 select-none">
+              World map image unavailable.
+            </span>
+          </div>
+        )}
       </div>
       {/* Landmarks overlay, scaled to map container */}
       <div className="absolute inset-0 pointer-events-none w-full h-full">
