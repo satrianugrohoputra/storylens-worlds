@@ -31,20 +31,25 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
 
   if (!open || !landmark) return null;
 
-  // URI-encode the image URL always!
-  const encodedImageSrc = encodeURI(landmark.image ?? "");
+  // Add more logging for debugging
+  const imgSrc = landmark.image ?? "";
+  const encodedImageSrc = encodeURI(imgSrc);
 
   const handleImgError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     setImgError(true);
-    setErrorMsg("Could not load: " + encodedImageSrc);
-    console.log(
-      "[LANDMARK MODAL] IMAGE ERROR",
-      landmark.name,
-      encodedImageSrc,
-      e
+    setErrorMsg(
+      `Could not load (len=${imgSrc.length}): "${imgSrc}"\nEncoded: "${encodedImageSrc}"\nSee console for details.`
     );
+    console.log("[LANDMARK MODAL] IMAGE ERROR", {
+      name: landmark.name,
+      raw: imgSrc,
+      encoded: encodedImageSrc,
+      rawLen: imgSrc.length,
+      encodedLen: encodedImageSrc.length,
+      e,
+    });
     e.currentTarget.src = "/placeholder.svg";
   };
 
@@ -113,9 +118,9 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
               style={{ maxHeight: 220, margin: "auto", display: "block" }}
             />
           )}
-          {/* OPTIONAL: show error msg for debugging */}
+          {/* Show error msg for debugging */}
           {errorMsg && (
-            <div className="absolute bottom-2 left-2 right-2 bg-red-50 text-red-700 px-2 py-1 rounded text-xs text-center shadow">
+            <div className="absolute bottom-2 left-2 right-2 bg-red-50 text-red-700 px-2 py-1 rounded text-xs text-center shadow whitespace-pre-wrap">
               {errorMsg}
             </div>
           )}
