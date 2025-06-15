@@ -21,10 +21,12 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
 }) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   React.useEffect(() => {
     setIsImageLoading(true);
     setImgError(false);
+    setErrorMsg(null);
   }, [landmark, open]);
 
   if (!open || !landmark) return null;
@@ -33,7 +35,27 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     setImgError(true);
+    setErrorMsg("Could not load: " + landmark.image);
+    console.log(
+      "[LANDMARK MODAL] IMAGE ERROR",
+      landmark.name,
+      landmark.image,
+      e
+    );
     e.currentTarget.src = "/placeholder.svg";
+  };
+
+  const handleImgLoad = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    setIsImageLoading(false);
+    setErrorMsg(null);
+    console.log(
+      "[LANDMARK MODAL] IMAGE LOADED",
+      landmark.name,
+      landmark.image,
+      e
+    );
   };
 
   return (
@@ -47,7 +69,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
           &times;
         </button>
         <div className="aspect-[5/4] w-full rounded-lg overflow-hidden flex items-center justify-center mb-3 bg-gray-200 relative">
-          {/* Skeleton Loader saat loading, fallback jika error */}
+          {/* Skeleton Loader */}
           {landmark.image && !imgError ? (
             <>
               {isImageLoading && (
@@ -58,7 +80,13 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
               <img
                 src={landmark.image}
                 alt={landmark.name}
-                className="object-contain object-center w-full h-full select-none rounded-lg transition"
+                className={`object-contain object-center w-full h-full select-none rounded-lg transition border-2 ${
+                  imgError
+                    ? "border-red-400"
+                    : isImageLoading
+                      ? "border-yellow-400"
+                      : "border-green-300"
+                }`}
                 loading="lazy"
                 draggable={false}
                 style={{
@@ -69,7 +97,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
                   margin: "auto",
                   display: "block",
                 }}
-                onLoad={() => setIsImageLoading(false)}
+                onLoad={handleImgLoad}
                 onError={handleImgError}
               />
             </>
@@ -81,6 +109,12 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
               draggable={false}
               style={{ maxHeight: 220, margin: "auto", display: "block" }}
             />
+          )}
+          {/* OPTIONAL: show error msg for debugging */}
+          {errorMsg && (
+            <div className="absolute bottom-2 left-2 right-2 bg-red-50 text-red-700 px-2 py-1 rounded text-xs text-center shadow">
+              {errorMsg}
+            </div>
           )}
         </div>
         <h2 className="font-bold text-2xl text-indigo-900 mb-2 text-center">
