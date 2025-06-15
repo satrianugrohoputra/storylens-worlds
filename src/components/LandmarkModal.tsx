@@ -23,7 +23,6 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
   const [imgError, setImgError] = useState(false);
 
   React.useEffect(() => {
-    // Reset state setiap landmark/modal dibuka tutup
     setIsImageLoading(true);
     setImgError(false);
   }, [landmark, open]);
@@ -34,7 +33,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     setImgError(true);
-    e.currentTarget.src = "/placeholder.svg"; // fallback ke public/placeholder.svg
+    e.currentTarget.src = "/placeholder.svg";
   };
 
   return (
@@ -47,7 +46,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
         >
           &times;
         </button>
-        <div className="aspect-[5/4] w-full rounded-lg overflow-hidden flex items-center justify-center mb-3 bg-gray-200">
+        <div className="aspect-[5/4] w-full rounded-lg overflow-hidden flex items-center justify-center mb-3 bg-gray-200 relative">
           {/* Skeleton Loader saat loading, fallback jika error */}
           {landmark.image && !imgError ? (
             <>
@@ -59,10 +58,17 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
               <img
                 src={landmark.image}
                 alt={landmark.name}
-                className="object-cover object-center w-full h-full select-none rounded-lg"
+                className="object-contain object-center w-full h-full select-none rounded-lg transition"
                 loading="lazy"
                 draggable={false}
-                style={{ maxHeight: 300, maxWidth: "100%", zIndex: 1 }}
+                style={{
+                  maxHeight: 300,
+                  maxWidth: "100%",
+                  zIndex: 1,
+                  background: "transparent",
+                  margin: "auto",
+                  display: "block",
+                }}
                 onLoad={() => setIsImageLoading(false)}
                 onError={handleImgError}
               />
@@ -73,11 +79,13 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
               alt="Placeholder"
               className="object-contain w-4/5 h-4/5 opacity-60"
               draggable={false}
-              style={{ maxHeight: 220 }}
+              style={{ maxHeight: 220, margin: "auto", display: "block" }}
             />
           )}
         </div>
-        <h2 className="font-bold text-2xl text-indigo-900 mb-2 text-center">{landmark.name}</h2>
+        <h2 className="font-bold text-2xl text-indigo-900 mb-2 text-center">
+          {landmark.name}
+        </h2>
         <p className="text-gray-800 text-base text-center">{landmark.description}</p>
       </div>
     </div>
