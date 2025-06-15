@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { ParticleBg } from "../components/ParticleBg";
 import { Hero } from "../components/Hero";
@@ -11,6 +10,7 @@ import { LocaleSwitcher } from "../components/LocaleSwitcher";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import { SpotifyPlayerBox } from "../components/SpotifyPlayerBox";
+import { MainNavbar } from "../components/MainNavbar";
 
 const chapterData = [
   {
@@ -104,6 +104,7 @@ export default function Index() {
 
   return (
     <div className="bg-black min-h-screen font-sans transition-colors duration-500 relative overflow-x-hidden selection:bg-indigo-400/70 selection:text-white">
+      <MainNavbar />
       <ParticleBg />
       <SVGLogoMorph />
       <ThemeToggle />

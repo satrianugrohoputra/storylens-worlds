@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import Library from "./pages/library";
 import ChapterOne from "./pages/ChapterOne";
 import ChapterTwo from "./pages/ChapterTwo";
 import ChapterThree from "./pages/ChapterThree";
+import AstroArchive from "./pages/AstroArchive";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +27,7 @@ const App = () => (
           <Route path="/chapter/3" element={<ChapterThree />} />
           <Route path="/about" element={<About />} />
           <Route path="/library" element={<Library />} />
+          <Route path="/astro-archive" element={<AstroArchive />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
