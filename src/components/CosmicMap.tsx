@@ -1,215 +1,207 @@
 
 import React, { useState } from "react";
 import { LandmarkModal } from "./LandmarkModal";
-import { Star } from "lucide-react";
+import { Check, MapPin } from "lucide-react";
 
-// Using https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg as a base reference for landmark px coordinates
+// World map background PNG (public domain: https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png)
+const MAP_IMAGE =
+  "https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png";
+
+// Map dimensions in px (equirectangular projection)
+// This is 1920x958 for this Wikipedia image
+const MAP_W = 1920, MAP_H = 958;
+
+// Hardcoded landmark dataset: name/country, img, description, coords (pixel approx)
 const LANDMARKS = [
   {
     title: "Great Pyramid of Giza",
-    location: "Giza, Egypt",
-    img: "https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=600&q=80",
-    description: "The only surviving Wonder of the Ancient World, built over 4,500 years ago as a monumental tomb.",
-    unlockedAfter: 0,
-    coords: [447, 233], // (longitude 31.13, latitude 29.98)
-  },
-  {
-    title: "Hanging Gardens of Babylon",
-    location: "Near Hillah, Iraq",
-    img: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=80",
-    description: "A legendary terraced garden; its actual existence is debated, but its splendor lives on in myth.",
-    unlockedAfter: 1,
-    coords: [513, 229], // (lon 44.4, lat 32.5)
-  },
-  {
-    title: "Mausoleum at Halicarnassus",
-    location: "Bodrum, Turkey",
-    img: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=600&q=80",
-    description: "A grand tomb built for Mausolus, blending Greek, Egyptian, and Lycian architectural styles.",
-    unlockedAfter: 2,
-    coords: [498, 233], // (lon 27.4, lat 37.0)
-  },
-  {
-    title: "Statue of Zeus at Olympia",
-    location: "Olympia, Greece",
-    img: "https://images.unsplash.com/photo-1466442929976-97f336a657be?auto=format&fit=crop&w=600&q=80",
-    description: "A giant gold and ivory statue honoring the king of the Greek gods, now vanished.",
-    unlockedAfter: 3,
-    coords: [470, 232], // (lon 21.6, lat 37.6)
-  },
-  {
-    title: "Temple of Artemis at Ephesus",
-    location: "Selçuk, Turkey",
-    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    description: "A massive temple dedicated to the goddess Artemis, famed for its grandeur and artistry.",
-    unlockedAfter: 4,
-    coords: [487, 232], // (lon 27.36, lat 37.94)
-  },
-  {
-    title: "Colossus of Rhodes",
-    location: "Rhodes, Greece",
-    img: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=600&q=80",
-    description: "A towering statue greeting travelers at the harbor; one of history's most awe-inspiring monuments.",
-    unlockedAfter: 5,
-    coords: [481, 235], // (lon 28.2, lat 36.45)
-  },
-  {
-    title: "Lighthouse of Alexandria",
-    location: "Alexandria, Egypt",
-    img: "https://images.unsplash.com/photo-1526102840910-931d6d7f6af7?auto=format&fit=crop&w=600&q=80",
-    description: "A marvel of engineering guiding ancient ships for centuries, lost to the sea.",
-    unlockedAfter: 6,
-    coords: [453, 235], // (lon 29.89, lat 31.20)
+    country: "Egypt",
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Kheops-Pyramid.jpg",
+    description: "The oldest and last surviving Wonder of the Ancient World.",
+    coords: [1057, 522], // Egypt in map image
+    key: "pyramid",
   },
   {
     title: "Eiffel Tower",
-    location: "Paris, France",
+    country: "France",
     img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80",
-    description: "The iconic Parisian symbol of engineering and romance, reaching up to the sky since 1889.",
-    unlockedAfter: 7,
-    coords: [419, 203], // (lon 2.29, lat 48.86)
+    description: "Paris' iconic iron tower of world expositions and romance.",
+    coords: [901, 363], // Paris
+    key: "eiffel",
   },
   {
-    title: "Louvre Museum",
-    location: "Paris, France",
-    img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80",
-    description: "Home to the Mona Lisa and world-class art from every era in a spectacular palace setting.",
-    unlockedAfter: 8,
-    coords: [420, 205], // (lon 2.336, lat 48.860)
-  },
-  {
-    title: "Times Square Clock Tower",
-    location: "New York, USA",
-    img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
-    description: "One of the world’s most energetic crossroads, legendary for lights, celebrations, and the New Year's ball drop.",
-    unlockedAfter: 9,
-    coords: [161, 182], // (lon -73.985, lat 40.758)
+    title: "Christ the Redeemer",
+    country: "Brazil",
+    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+    description: "The immense Art Deco statue watching over Rio de Janeiro.",
+    coords: [680, 733], // Rio
+    key: "christ",
   },
   {
     title: "Mount Fuji",
-    location: "Honshu, Japan",
-    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
-    description: "Japan’s sacred and most photographed mountain, renowned for its beauty and cultural significance.",
-    unlockedAfter: 10,
-    coords: [857, 235], // (lon 138.726, lat 35.362)
+    country: "Japan",
+    img: "https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=600&q=80",
+    description: "Snow-capped sacred mountain; Japan’s symbol of natural beauty.",
+    coords: [1668, 471], // Fuji
+    key: "fuji",
+  },
+  {
+    title: "Times Square Clock Tower",
+    country: "USA",
+    img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
+    description: "New York’s famous crossroads: neon, crowds, and energy.",
+    coords: [388, 386], // NYC
+    key: "times",
+  },
+  {
+    title: "Machu Picchu",
+    country: "Peru",
+    img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80",
+    description: "Lost Inca city atop the Andes—mystical and awe-inspiring.",
+    coords: [323, 683], // Peru
+    key: "machu",
+  },
+  {
+    title: "Colosseum",
+    country: "Italy",
+    img: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=600&q=80",
+    description: "Rome’s ancient amphitheater, a monument to spectacle.",
+    coords: [1042, 430], // Rome
+    key: "colosseum",
   },
 ];
 
-// Map dimensions in px (SVG coordinates, 1024x512)
-const MAP_W = 1024, MAP_H = 512;
+// User's unlocked progress. For demo, the first 4 unlocked:
+const userProgress = [0, 1, 2, 4]; // Indices of unlocked
 
-// For demo: how many landmarks to “unlock” (simulate user progress)
-const USER_UNLOCKED = 3; // Only the first 4 will be “active”
+// Responsive modal direction detection (mobile/desktop)
+function isMobile() {
+  if (typeof window === "undefined") return false;
+  return window.innerWidth < 768;
+}
 
 export const CosmicMap: React.FC = () => {
   const [selected, setSelected] = useState<number | null>(null);
 
+  // Progress: number unlocked
+  const exploredCount = userProgress.length;
+
   return (
-    <div className="relative w-full max-w-5xl aspect-[2/1] mx-auto overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-blue-800 via-indigo-900 to-black">
-      {/* SVG stylized world map, equirectangular projection */}
-      <svg
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${MAP_W} ${MAP_H}`}
-        className="block w-full h-full"
-        style={{ objectFit: "cover" }}
-        aria-label="Stylized World Map"
-        tabIndex={-1}
-      >
-        {/* Background terrain gradient */}
-        <defs>
-          <radialGradient id="earthGlow" cx="55%" cy="50%" r="92%" fx="55%" fy="40%">
-            <stop offset="0%" stopColor="#a5b4fc" stopOpacity="1" />
-            <stop offset="40%" stopColor="#312e81" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#1e293b" stopOpacity="1" />
-          </radialGradient>
-        </defs>
-        {/* Ocean/terrain fill */}
-        <rect width={MAP_W} height={MAP_H} fill="url(#earthGlow)" />
-        {/* Simple stylized landmass (vectorized, very minimal outline for demo) */}
-        <path
-          d="M980,380 Q900,320 860,220 Q800,110 700,80 Q645,78 600,130 Q590,250 470,190 Q420,170 400,230 Q350,350 190,260 Q80,210 57,293 Q10,340 38,395 Q95,480 394,480 Q514,410 700,490 Q880,500 980,380 Z"
-          fill="#64b5f6"
-          opacity="0.33"
-          filter="url(#softShadow)"
+    <div className="relative w-full max-w-5xl aspect-[2/1] mx-auto rounded-2xl shadow-2xl overflow-hidden"
+      style={{ background: "linear-gradient(135deg,#000,#334155 60%,#4f46e5)" }}>
+      {/* World map image */}
+      <div className="absolute inset-0 w-full h-full z-0">
+        <img
+          src={MAP_IMAGE}
+          alt="World Map"
+          className="w-full h-full object-cover object-center"
+          draggable={false}
+          style={{
+            filter: "brightness(1.1) saturate(1.14) contrast(1.1)",
+            pointerEvents: "none"
+          }}
         />
-        {/* Landmarks */}
+      </div>
+      {/* Landmarks */}
+      <div className="absolute inset-0 pointer-events-none">
         {LANDMARKS.map((lm, i) => {
-          const isUnlocked = USER_UNLOCKED >= lm.unlockedAfter;
+          const unlocked = userProgress.includes(i);
+
           return (
-            <g
-              key={lm.title}
-              tabIndex={isUnlocked ? 0 : -1}
-              className="transition-transform duration-200"
+            <button
+              key={lm.key}
+              type="button"
+              className={`
+                absolute group flex flex-col items-center 
+                z-10 select-none pointer-events-auto
+                transition-transform
+                ${unlocked 
+                  ? "hover:scale-110 active:scale-95"
+                  : "opacity-50 cursor-not-allowed"
+                }
+              `}
               style={{
-                cursor: isUnlocked ? "pointer" : "not-allowed",
-                pointerEvents: "auto",
+                left: `calc(${lm.coords[0] / MAP_W * 100}% - 24px)`,
+                top: `calc(${lm.coords[1] / MAP_H * 100}% - 32px)`,
+                transition: "transform 0.2s"
               }}
-              onClick={() => isUnlocked && setSelected(i)}
-              onKeyDown={e => {
-                if (e.key === "Enter" && isUnlocked) setSelected(i);
-              }}
+              disabled={!unlocked}
+              tabIndex={unlocked ? 0 : -1}
+              onClick={() => unlocked && setSelected(i)}
+              aria-label={lm.title}
             >
-              <circle
-                cx={lm.coords[0]}
-                cy={lm.coords[1]}
-                r="18"
-                className={`transition filter ${
-                  isUnlocked
-                    ? "opacity-100"
-                    : "opacity-50 grayscale"
-                }`}
-                fill="rgba(255,255,255,0.05)"
-                stroke="rgba(121,99,14,0.08)"
-              />
-              <foreignObject
-                x={lm.coords[0] - 16}
-                y={lm.coords[1] - 16}
-                width={32}
-                height={32}
-                className="overflow-visible"
-                aria-label={lm.title}
-              >
-                <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-yellow-400 text-yellow-300 
-                    shadow-lg transition-transform duration-200 hover:scale-105
-                    ${isUnlocked
-                    ? "cursor-pointer animate-pulse opacity-100"
-                    : "cursor-not-allowed opacity-50 grayscale"
-                  }`}
-                  title={isUnlocked ? lm.title : "Unlock by progressing"}
-                >
-                  <Star
-                    className="w-6 h-6"
-                    strokeWidth={2.3}
-                    fill={isUnlocked ? "#fde68a" : "#cbd5e1"}
-                  />
-                </div>
-              </foreignObject>
-            </g>
+              {/* Glow / pulse ring */}
+              <span className={`block w-14 h-14 rounded-full absolute left-[-12px] top-[-8px] -z-10
+                ${unlocked ? "ring-2 ring-yellow-300/80 animate-pulse bg-yellow-100/15" : ""}`}>
+              </span>
+              {/* Image-based marker */}
+              <span className="shadow-lg border-2 border-white/80 rounded-full flex items-center justify-center overflow-hidden w-12 h-12 bg-white/10 transition-all duration-200">
+                <img
+                  src={lm.img}
+                  alt={lm.title}
+                  className={`
+                    w-10 h-10 object-cover rounded-full
+                    ${unlocked
+                      ? "grayscale-0"
+                      : "grayscale brightness-90 opacity-80"
+                    }
+                  `}
+                  draggable={false}
+                />
+                {/* Visited check */}
+                {unlocked && (
+                  <span className="absolute bottom-1 right-1 bg-yellow-200 rounded-full p-1 shadow">
+                    <Check className="w-3 h-3 text-yellow-900 drop-shadow" />
+                  </span>
+                )}
+              </span>
+              {/* Animated pulse */}
+              {unlocked && <span className="absolute inset-0 rounded-full animate-pulse bg-yellow-200/10 pointer-events-none"></span>}
+              {/* Tooltip */}
+              <span className={`
+                pointer-events-none text-xs
+                absolute left-1/2 -translate-x-1/2 top-14
+                px-2 py-1 rounded bg-black/70 text-white whitespace-nowrap shadow-lg
+                transition-all opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 duration-200
+                z-20
+              `}>
+                {lm.title}
+              </span>
+            </button>
           );
         })}
-      </svg>
+      </div>
+      {/* Animated lines between unlocked? */}
+      {/* Bonus: You could add animated SVG lines between unlocked landmarks here */}
+      {/* Progress bar top-right */}
+      <div className="absolute top-4 right-4 flex flex-col items-end gap-2 z-20">
+        <div className="bg-black/50 backdrop-blur-md rounded-full px-5 py-2 flex items-center gap-2 shadow-lg">
+          {/* Glowing earth icons or colored dots for each landmark progress */}
+          {LANDMARKS.map((_, i) => (
+            <span key={i}
+              className={
+                "mr-1 w-4 h-4 rounded-full inline-block transition shadow " +
+                (userProgress.includes(i)
+                  ? "bg-yellow-400 drop-shadow-[0_0_6px_#fde047d6]"
+                  : "bg-gray-400 bg-opacity-30")
+              }
+            />
+          ))}
+          <span className="ml-2 font-bold text-indigo-100 text-base">
+            Landmarks Explored: {exploredCount} / {LANDMARKS.length}
+          </span>
+        </div>
+      </div>
       {/* Landmark Modal */}
       <LandmarkModal
         open={selected !== null}
         onOpenChange={open => setSelected(open ? selected : null)}
-        landmark={selected !== null ? LANDMARKS[selected] : null}
+        landmark={selected !== null ? {
+          ...LANDMARKS[selected],
+          unlocked: userProgress.includes(selected)
+        } : null}
+        isMobile={typeof window !== "undefined" && window.innerWidth < 768}
       />
-      {/* (Optional) Progress bar, can add below if desired */}
-      <div className="absolute left-5 bottom-5 bg-black bg-opacity-40 rounded-full px-4 py-2 flex items-center gap-2 text-indigo-100 shadow backdrop-blur-sm select-none text-xs md:text-sm">
-        {Array.from({ length: LANDMARKS.length }).map((_, i) => (
-          <span
-            key={i}
-            className={`inline-block w-2.5 h-2.5 mx-0.5 rounded-full transition 
-            ${i <= USER_UNLOCKED
-                ? "bg-yellow-300 shadow-[0_0_7px_1px_#fde047a2]"
-                : "bg-gray-400 bg-opacity-30"
-              }`}
-          />
-        ))}
-        <span className="ml-2">Progress: {USER_UNLOCKED + 1} / {LANDMARKS.length}</span>
-      </div>
     </div>
   );
 };
