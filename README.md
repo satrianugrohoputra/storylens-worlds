@@ -1,93 +1,59 @@
+# 🌌 Astro — StoryLens Worlds
 
-# StoryLens 3D
-
-A production-ready, scroll-driven narrative site that merges text, animation, and live interactive 3D using React + TypeScript, Tailwind, React-Three-Fiber, and Framer Motion.
-
-## Live demo
-
-**TODO:** Deploy to Vercel/Netlify and add your link here.
+**Astro** adalah proyek eksploratif dan interaktif berbasis web yang menggabungkan jurnal pribadi, inspirasi visual, peta landmark dunia, dan pengalaman audio. Dirancang dengan gaya kosmik dan UI yang estetis, **Astro** bertujuan membantu pengguna menjelajahi dunia—baik luar maupun dalam diri.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Fitur Utama
+
+### 📖 Chapter Progress
+Visualisasi kemajuan per bab (chapter) dalam bentuk bar progres, memungkinkan pengguna melacak perjalanan eksploratif atau journaling mereka.
+
+### 🎵 Music Box
+Integrasi dengan Spotify. Pengguna dapat membagikan satu lagu favorit yang merepresentasikan mood mereka saat ini.
+
+### 🔭 Astro Archive
+Galeri grid berisi:
+- Gambar luar angkasa (NASA atau karya sendiri)
+- Kutipan inspiratif
+- Modal pop-up berisi quote & detail
+
+✨ **UI:** Grid `grid-cols-2` hingga `md:grid-cols-3`, dengan efek `hover:scale-105` dan `shadow-glow`.
+
+### 🗺️ Cosmic Compass
+Peta interaktif dunia nyata:
+- Landmark terkenal dunia (7 Keajaiban Dunia, Eiffel, Louvre, NYC, Pantai & Gunung indah)
+- Klik titik lokasi untuk menampilkan foto & informasi
+- Progress bar jumlah landmark yang sudah dikunjungi/unlocked
+
+🛠️ Dibuat menggunakan:
+- React + Tailwind CSS  
+- `react-simple-maps` untuk peta SVG interaktif  
+- Modal ringan & responsif
+
+---
+
+## 📷 Screenshot
+
+![Astro Screenshot](./public/screenshot.png)
+
+---
+
+## 📦 Teknologi yang Digunakan
+
+- **React** — library UI modern berbasis komponen
+- **Tailwind CSS** — utilitas styling untuk tampilan yang konsisten & cepat
+- **Firebase Authentication** *(opsional)* — autentikasi pengguna
+- **Vercel** — untuk deployment instan & cepat
+- **react-simple-maps** — render SVG world map ringan
+- **Spotify Embed API** — integrasi pemutar lagu
+
+---
+
+## ⚙️ Instalasi & Penggunaan
 
 ```bash
-# Clone repository & install dependencies
+git clone https://github.com/username/astro-storylens-worlds.git
+cd astro-storylens-worlds
 npm install
-
-# Start Vite development server
 npm run dev
-```
-
-The app will be available at http://localhost:8080
-
----
-
-## 📁 Folder Structure (Relevant Parts)
-
-```
-src/
-  components/
-    Navbar.tsx
-    Chapter.tsx
-    ModelViewer.tsx
-    ProgressBar.tsx
-    Footer.tsx
-    ParticleBackground.tsx
-  pages/
-    Index.tsx
-    about.tsx
-    library.tsx
-  assets/
-    models/
-      place-your-glb-or-gltf-here.glb
-  styles/
-    globals.css
-  App.tsx
-  main.tsx
-...
-```
-
----
-
-## 🖼️ Adding/Using 3D Models
-
-- Put your `.glb` or `.gltf` model files in `src/assets/models/`
-- Reference them in chapters with a relative path, e.g.:
-
-```ts
-modelUrl: "/src/assets/models/your-model.glb"
-```
-
-- For an online model browser, add more to `/pages/library.tsx`
-- Replace `sample-cube.glb` with your own—try free assets from [poly.pizza](https://poly.pizza/) or [sketchfab.com](https://sketchfab.com/)
-
----
-
-## ✨ Features
-
-- Scroll-based chapter reveals (typewriter, fade, slide-up)
-- Background gradient or animated particle/star canvas
-- Fully interactive 3D viewer (rotate, zoom)
-- Scroll progress bar with jump-to-chapter dots
-- Responsive split or stacked layouts
-- All styles via Tailwind (see `src/styles/globals.css`)
-- Add more chapters, new models, or pages as desired!
-
----
-
-## 🛠️ Tech Stack
-
-- React, TypeScript, Tailwind, shadcn/ui
-- 3D: @react-three/fiber, @react-three/drei
-- Animations: framer-motion
-- Routing: react-router-dom
-
----
-
-## 📦 Production & Deployment
-
-- `npm run build` for optimized static build, ready for Vercel or Netlify.
-- No API keys or backend required.
-- Customize chapters/text by editing `src/pages/Index.tsx` and model assets.
-
