@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ParticleBg } from "../components/ParticleBg";
 import { Hero } from "../components/Hero";
@@ -9,35 +10,65 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { LocaleSwitcher } from "../components/LocaleSwitcher";
 import Footer from "../components/Footer";
 
+// Full, rich content and interactivity for each StoryLens Worlds chapter
 const chapterData = [
   {
     id: "chapter-1",
     title: "The Journey Begins",
     content: [
-      "Embark on an inspirational adventure.",
-      "Every moment sparkles with possibility.",
+      "Welcome, traveler. Every great adventure starts with a single step into the unknown. Here, you’ll discover the spark that ignites innovation.",
     ],
+    bullets: [
+      "Origins of the story – how it all started",
+      "First challenge faced",
+      "The “aha!” moment",
+    ],
+    audioText:
+      "Welcome, traveler. Every great adventure starts with a single step into the unknown. Here, you’ll discover the spark that ignites innovation. Origins of the story, first challenge faced, and that unforgettable 'aha!' moment.",
+    hasAudio: true,
+    hasBookmark: false,
+    hasPortalLottie: false,
+    hasProgressChart: false,
+    hasCta: false,
   },
   {
     id: "chapter-2",
     title: "Through the Portal",
     content: [
-      "Step into the unknown—but also within.",
-      "New worlds await: see, listen, feel.",
-    ]
+      "Cross the threshold and behold new perspectives. As you step through, reality bends and imagination takes flight.",
+    ],
+    bullets: [
+      "Interactive portal Lottie animation (fade-in)",
+      "Three key features: Speed, Scale, Creativity",
+    ],
+    audioText: "",
+    hasAudio: false,
+    hasBookmark: true,
+    hasPortalLottie: true,
+    hasProgressChart: false,
+    hasCta: false,
   },
   {
     id: "chapter-3",
-    title: "Unveiling Light",
+    title: "Vision of Tomorrow",
     content: [
-      "Let luminous stories illuminate your path.",
-      "Legends and dreams swirl in cosmic dance.",
-    ]
+      "Gaze ahead to what could be. Our journey shapes the future we will live in—imagine the possibilities.",
+    ],
+    bullets: [
+      "Roadmap for next steps",
+      "How users can contribute (feedback, share link)",
+      "Call to action button: “Start Your Own Story”",
+    ],
+    audioText: "",
+    hasAudio: false,
+    hasBookmark: false,
+    hasPortalLottie: false,
+    hasProgressChart: true,
+    hasCta: true,
   },
 ];
 
 export default function Index() {
-  // For tracking scroll progress and bookmarks
   const [completed, setCompleted] = useState<number>(0);
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     if (typeof window !== "undefined") {
@@ -46,7 +77,7 @@ export default function Index() {
     return [];
   });
   const [locale, setLocale] = useState<"en" | "id">("en");
-  // Detect chapter completion on scroll
+
   useEffect(() => {
     const onScroll = () => {
       let done = 0;
@@ -62,7 +93,7 @@ export default function Index() {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  // Keep bookmarks in localStorage
+
   useEffect(() => {
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
   }, [bookmarks]);
@@ -81,7 +112,16 @@ export default function Index() {
           {chapterData.map((chapter, idx) => (
             <ChapterCard
               key={chapter.id}
-              {...chapter}
+              id={chapter.id}
+              title={chapter.title}
+              content={chapter.content}
+              bullets={chapter.bullets}
+              audioText={chapter.audioText}
+              hasAudio={chapter.hasAudio}
+              hasBookmark={chapter.hasBookmark}
+              hasPortalLottie={chapter.hasPortalLottie}
+              hasProgressChart={chapter.hasProgressChart}
+              hasCta={chapter.hasCta}
               bookmarked={bookmarks.includes(chapter.id)}
               setBookmarked={on => {
                 setBookmarks(bm => {
@@ -92,6 +132,8 @@ export default function Index() {
                 });
               }}
               locale={locale}
+              chartProgress={completed}
+              totalChapters={chapterData.length}
             />
           ))}
         </div>
