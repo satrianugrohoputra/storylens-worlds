@@ -1,10 +1,9 @@
 
 import React from "react";
 import { MainNavbar } from "../components/MainNavbar";
-import { CosmicMap } from "../components/CosmicMap";
+import { Map } from "../components/Map";
 
 export default function CosmicCompass() {
-  console.log("CosmicCompass page mounted");
   return (
     <div className="min-h-screen bg-black relative pb-10">
       <MainNavbar />
@@ -19,10 +18,9 @@ export default function CosmicCompass() {
         </div>
         {/* Responsive Map Panel with Progress bar inside */}
         <div className="w-full max-w-5xl flex-1">
-          <CosmicMap />
+          <Map />
         </div>
       </div>
-      {/* No duplicate headings, subtitle, or progress bar */}
     </div>
   );
 }
