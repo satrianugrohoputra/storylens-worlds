@@ -1,44 +1,40 @@
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Environment, Html } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Suspense } from "react";
 
 type ModelViewerProps = {
-  modelUrl: string;
-  hint?: boolean;
+  variant: "cube" | "sphere" | "torus";
 };
 
-function ModelInner({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
-  return <primitive object={scene} />;
-}
-
-export const ModelViewer: React.FC<ModelViewerProps> = ({ modelUrl, hint }) => {
+export const ModelViewer: React.FC<ModelViewerProps> = ({ variant }) => {
   return (
-    <div className="w-full h-80 md:h-[28rem] bg-black/70 rounded-xl overflow-hidden shadow-xl relative">
-      <Canvas camera={{ position: [0, 0, 2.5], fov: 55 }}>
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[3,4,5]} intensity={0.65} />
-        <Suspense fallback={<Html center className="text-xl text-white">Loading 3D…</Html>}>
-          <ModelInner url={modelUrl} />
+    <div className="w-full h-full min-h-[16rem] bg-black/70 rounded-xl shadow-xl overflow-hidden">
+      <Canvas camera={{ position: [0, 0, 3.2], fov: 54 }}>
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[3,4,5]} intensity={0.64} />
+        <Suspense fallback={null}>
+          {variant === "cube" && (
+            <mesh rotation={[0.5, 0.4, 0]}>
+              <boxGeometry args={[1.16, 1.16, 1.16]} />
+              <meshStandardMaterial color="#7cc3ff" metalness={0.33} roughness={0.47} />
+            </mesh>
+          )}
+          {variant === "sphere" && (
+            <mesh rotation={[0.2, 0.35, 0]}>
+              <sphereGeometry args={[0.93, 64, 48]} />
+              <meshStandardMaterial color="#efdeff" metalness={0.58} roughness={0.32} />
+            </mesh>
+          )}
+          {variant === "torus" && (
+            <mesh rotation={[0.7, 0.37, 0]}>
+              <torusGeometry args={[0.77, 0.28, 32, 90]} />
+              <meshStandardMaterial color="#b5fffc" metalness={0.7} roughness={0.23} />
+            </mesh>
+          )}
         </Suspense>
-        <Environment preset="warehouse" />
-        <OrbitControls
-          enablePan={false}
-          enableZoom={true}
-          enableRotate={true}
-          minDistance={1.2}
-          maxDistance={8}
-        />
+        <OrbitControls enablePan={false} enableZoom={true} enableRotate={true} minDistance={1.3} maxDistance={8} />
       </Canvas>
-      {hint && (
-        <div className="absolute bottom-2 right-2 bg-black/60 text-xs md:text-sm text-white px-3 py-1 rounded-lg pointer-events-none select-none shadow">
-          Drag to rotate, scroll to zoom
-        </div>
-      )}
     </div>
   );
 };
-
-// Required by drei's useGLTF:
-useGLTF.preload("/src/assets/models/sample-cube.glb");

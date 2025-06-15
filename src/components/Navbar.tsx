@@ -1,15 +1,15 @@
 
-import { motion } from "framer-motion";
+import React from "react";
 
 const Navbar = () => (
-  <nav className="fixed w-full z-30 top-0 left-0 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-sm shadow-none flex items-center justify-between px-10 py-4">
+  <nav className="fixed top-0 left-0 w-full z-30 flex items-center justify-between px-8 md:px-16 py-4 bg-gradient-to-b from-black/90 to-transparent backdrop-blur-md shadow-lg">
     <div className="flex items-center gap-2">
-      <span className="font-bold text-2xl tracking-tight text-white">StoryLens <span className="text-indigo-400">3D</span></span>
+      <span className="font-extrabold text-2xl tracking-tight text-white">StoryLens <span className="text-indigo-300">Worlds</span></span>
     </div>
-    <div className="hidden md:flex gap-5">
-      <a className="story-link text-white/70 hover:text-indigo-400 font-medium text-sm transition" href="#chapter-1">Chapters</a>
-      <a className="story-link text-white/70 hover:text-indigo-400 font-medium text-sm transition" href="#about">About</a>
-      {/* Add more nav links as needed */}
+    <div className="flex gap-8 text-base">
+      <a href="#hero" className="story-link text-white/80 hover:text-indigo-400 transition">Home</a>
+      <a href="#features" className="story-link text-white/80 hover:text-indigo-400 transition">Features</a>
+      <a href="#contact" className="story-link text-white/80 hover:text-indigo-400 transition">Contact</a>
     </div>
   </nav>
 );
