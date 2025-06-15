@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { ParticleBg } from "../components/ParticleBg";
 import { Hero } from "../components/Hero";
@@ -112,8 +113,9 @@ export default function Index() {
         <Hero />
         <div className="relative z-10 max-w-2xl mx-auto py-10 flex flex-col gap-12">
           <ProgressChart completed={completed} total={chapterData.length} bookmarks={bookmarks} />
+          {/* Render each chapter card, and insert the Spotify player immediately after the last one */}
           {chapterData.map((chapter, idx) => {
-            // Only wrap chapters 1 and 2
+            // Only wrap chapters 1 and 2 in links
             const chapterCard = (
               <ChapterCard
                 key={chapter.id}
@@ -141,25 +143,41 @@ export default function Index() {
                 totalChapters={chapterData.length}
               />
             );
+            // Render ChapterCard, and after the last one, also render SpotifyPlayerBox
             if (chapter.route) {
               return (
-                <Link
-                  to={chapter.route}
-                  key={chapter.id}
-                  className="rounded-xl shadow-xl ring-2 ring-indigo-400/0 hover:ring-indigo-300/70 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all group"
-                  tabIndex={0}
-                  aria-label={`View details of ${chapter.title}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  {chapterCard}
-                </Link>
+                <React.Fragment key={chapter.id}>
+                  <Link
+                    to={chapter.route}
+                    className="rounded-xl shadow-xl ring-2 ring-indigo-400/0 hover:ring-indigo-300/70 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all group"
+                    tabIndex={0}
+                    aria-label={`View details of ${chapter.title}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {chapterCard}
+                  </Link>
+                  {idx === chapterData.length - 1 && (
+                    <div className="mt-10">
+                      <SpotifyPlayerBox />
+                    </div>
+                  )}
+                </React.Fragment>
               );
             } else {
-              return chapterCard;
+              return (
+                <React.Fragment key={chapter.id}>
+                  {chapterCard}
+                  {idx === chapterData.length - 1 && (
+                    <div className="mt-10">
+                      <SpotifyPlayerBox />
+                    </div>
+                  )}
+                </React.Fragment>
+              );
             }
           })}
         </div>
-        <SpotifyPlayerBox />
+        {/* SpotifyPlayerBox is now rendered above, right below the last card */}
       </main>
       <Footer />
     </div>
