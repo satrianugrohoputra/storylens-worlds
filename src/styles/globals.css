@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Extra global custom styles, extending Tailwind (ensure index.css imports this) */
 
 .particle-bg-canvas {
@@ -39,3 +43,4 @@
     gap: 4rem;
   }
 }
+
