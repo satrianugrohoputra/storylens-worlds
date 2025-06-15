@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, ArrowRight } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
 import Footer from "../components/Footer";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 // Animation variants
 const fadeInUp = {
@@ -27,51 +28,86 @@ const fadeIn = {
 
 const stepData = [
   {
-    icon: <ArrowRight size={26} className="text-indigo-200" />,
-    title: "Reflect & Share",
-    desc: "Review your journey and share insights."
+    title: "Reflect & Refine",
+    desc: (
+      <>
+        Take a moment to look back on your journey. What insights emerged? Which challenges sharpened your resolve?
+        <div className="mt-2 bg-indigo-900/30 rounded px-3 py-2 text-sm text-indigo-200 italic">
+          Journal prompt: <span className="font-semibold text-indigo-100">“What was my single greatest learning from this journey?”</span>
+        </div>
+      </>
+    ),
+    icon: (
+      <span className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600/30">
+        <Star size={26} className="text-indigo-200" />
+      </span>
+    ),
   },
   {
-    icon: <Star size={26} className="text-yellow-200" />,
-    title: "Collaborate & Build",
-    desc: "Contribute your ideas or join the community."
+    title: "Collaborate & Co‑Create",
+    desc: (
+      <>
+        No great vision is realized alone. Invite others to join your adventure—share ideas, gather feedback, build together.<br />
+        <a
+          href="https://community.storylens.dev/"
+          className="story-link text-indigo-100 font-semibold underline hover:text-indigo-300"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Join the StoryLens Community Forum
+        </a>
+      </>
+    ),
+    icon: (
+      <span className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-700/20">
+        <Star size={26} className="text-yellow-200" />
+      </span>
+    ),
   },
   {
-    icon: <ArrowRight size={26} className="text-green-200 rotate-45" />,
     title: "Launch & Evolve",
-    desc: "Turn inspiration into action; build your own story world."
+    desc: (
+      <>
+        Now is the time to act. Prototype your vision, test with real users, then iterate toward perfection.
+      </>
+    ),
+    icon: (
+      <span className="flex items-center justify-center w-12 h-12 rounded-full bg-green-700/20">
+        <Star size={26} className="text-green-200" />
+      </span>
+    ),
   }
 ];
 
 const contributeList = [
   {
-    icon: <ArrowRight size={22} className="text-pink-300" />,
-    label: "Feedback Forum",
-    desc: "Join our discussion board and leave your thoughts.",
-    href: "#feedback" // Placeholder
-  },
-  {
-    icon: <Star size={22} className="text-yellow-400" />,
+    icon: <Star size={22} className="text-indigo-200" />,
     label: "Share Your Story",
-    desc: "Submit your crafted narrative for community spotlight.",
+    desc: "Submit your own narrative for our “Community Spotlight”—we feature the most inspiring journeys each month.",
     href: "#share" // Placeholder
   },
   {
-    icon: <ArrowRight size={22} className="text-blue-300" />,
-    label: "Open Source Repository",
-    desc: "Contribute code, assets, or translations on GitHub.",
-    href: "https://github.com/" // Replace with real repo if available
+    icon: <Star size={22} className="text-yellow-400" />,
+    label: "Offer Feedback",
+    desc: "Rate and comment on other stories. Your perspective could spark the next big idea.",
+    href: "#feedback" // Placeholder
+  },
+  {
+    icon: <Star size={22} className="text-green-300" />,
+    label: "Contribute Assets",
+    desc: "Upload illustrations, Lottie animations, or 3D models to enrich the StoryLens library.",
+    href: "#assets" // Placeholder
   }
 ];
 
 const chapterTooltips = [
-  "Chapter 1 complete",
-  "Chapter 2 complete",
-  "Chapter 3 complete"
+  "Chapter 1 Complete: The Journey Begins",
+  "Chapter 2 Complete: Through the Portal",
+  "Chapter 3 Complete: Vision of Tomorrow"
 ];
 
 const StarRow = () => (
-  <div className="flex justify-center mb-6 gap-3">
+  <div className="flex justify-center mb-4 gap-3">
     <TooltipProvider>
       {Array.from({ length: 3 }).map((_, idx) => (
         <Tooltip key={idx}>
@@ -96,7 +132,7 @@ const StarRow = () => (
 
 const Roadmap = () => (
   <motion.section
-    className="mt-10 mb-10 w-full max-w-2xl mx-auto"
+    className="mt-10 mb-6 w-full max-w-2xl mx-auto"
     initial="hidden"
     whileInView="visible"
     viewport={{ once: true, amount: 0.4 }}
@@ -107,11 +143,11 @@ const Roadmap = () => (
           key={step.title}
           custom={i}
           variants={fadeInUp}
-          className="flex-1 flex flex-col items-center rounded-2xl bg-indigo-800/80 px-6 py-6 m-1 shadow-xl border border-indigo-500/30 transition-all relative hover:shadow-indigo-600/40 hover:brightness-110 hover:scale-105 focus-within:ring-2 focus-within:ring-indigo-300 cursor-pointer"
+          className="flex-1 flex flex-col items-center rounded-2xl bg-indigo-800/80 px-6 py-7 m-1 shadow-xl border border-indigo-500/30 transition-all relative hover:shadow-indigo-600/40 hover:brightness-110 hover:scale-105 focus-within:ring-2 focus-within:ring-indigo-300 cursor-pointer"
           tabIndex={0}
         >
           <div className="mb-2">{step.icon}</div>
-          <div className="font-bold text-indigo-100 text-lg">{step.title}</div>
+          <div className="font-bold text-indigo-100 text-lg mb-2">{step.title}</div>
           <div className="text-indigo-200/90 text-center text-sm mt-1">{step.desc}</div>
           {i < 2 && (
             <div className="hidden md:block absolute right-[-32px] top-1/2 -translate-y-1/2">
@@ -131,6 +167,7 @@ const HowToContribute = () => (
     whileInView="visible"
     viewport={{ once: true, amount: 0.4 }}
   >
+    <h2 className="font-semibold text-indigo-200 text-xl mb-3 text-center">How You Can Contribute</h2>
     <ul className="flex flex-col gap-4">
       {contributeList.map((item, i) => (
         <motion.li
@@ -155,6 +192,68 @@ const HowToContribute = () => (
   </motion.section>
 );
 
+const InspirationalQuote = () => (
+  <motion.section
+    className="max-w-2xl mx-auto mb-6 px-6"
+    initial={{ opacity: 0, y: 25 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7, delay: 0.11 }}
+    viewport={{ once: true, amount: 0.5 }}
+  >
+    <blockquote className="border-l-4 border-yellow-400 bg-yellow-700/15 rounded-lg px-7 py-6 text-yellow-200 text-lg md:text-xl shadow-lg font-semibold italic mb-0 relative">
+      “The future belongs to those who believe in the beauty of their dreams.”
+      <span className="block text-sm text-yellow-300 font-normal not-italic mt-2 ml-2">— Eleanor Roosevelt</span>
+    </blockquote>
+  </motion.section>
+);
+
+const ReflectionTextarea = ({
+  label,
+  placeholder,
+  storageKey,
+}: {
+  label: string;
+  placeholder: string;
+  storageKey: string;
+}) => {
+  const [value, setValue] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const savedValue = localStorage.getItem(storageKey);
+    if (savedValue) setValue(savedValue);
+  }, [storageKey]);
+
+  const onSave = () => {
+    localStorage.setItem(storageKey, value);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1500);
+  };
+
+  return (
+    <div className="my-7 flex flex-col gap-2 max-w-xl mx-auto animate-fade-in">
+      <label className="text-indigo-200 font-bold mb-1" htmlFor={storageKey}>{label}</label>
+      <Textarea
+        className="bg-black/50 border-indigo-700/60 focus:ring-2 focus:ring-indigo-300 text-indigo-100 placeholder:text-indigo-400/60 min-h-[90px]"
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        id={storageKey}
+        placeholder={placeholder}
+        spellCheck
+      />
+      <div className="flex items-center gap-3 mt-2">
+        <Button
+          className="bg-indigo-600/80 hover:bg-indigo-700/90 text-indigo-100 font-semibold px-6 py-2 rounded-md transition"
+          onClick={onSave}
+        >
+          Save
+        </Button>
+        {saved && <span className="text-green-300 text-sm animate-fade-in">Saved!</span>}
+      </div>
+    </div>
+  );
+};
+
 export default function ChapterThree() {
   const navigate = useNavigate();
 
@@ -171,30 +270,52 @@ export default function ChapterThree() {
             transition={{ type: "spring", stiffness: 110, damping: 15, duration: 0.8 }}
           >
             <StarRow />
-            <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-100 drop-shadow-xl text-center tracking-tight animate-typewriter">
-              Chapter 3: Vision of Tomorrow
-            </h1>
-            <div className="mt-2 text-indigo-300 text-lg md:text-xl text-center max-w-xl font-medium animate-fade-in">
-              Gaze ahead to what could be. Our journey shapes the future we will live in—imagine the possibilities.
+            <div className="flex flex-col gap-1 items-center text-center">
+              <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-100 drop-shadow-xl tracking-tight animate-typewriter">
+                Chapter 3: Vision of Tomorrow
+              </h1>
+              <div className="mt-2 text-indigo-300 text-lg md:text-xl max-w-xl font-medium animate-fade-in">
+                “You stand at the threshold of possibility. The path behind you glows with lessons learned, and the road ahead shimmers with promise. In this final chapter, we cast our gaze forward—envisioning the future you will help to create.”
+              </div>
+              <div className="flex items-center gap-2 mt-3">
+                <span className="text-yellow-300 text-lg font-semibold">⭐️ All three chapters complete! ⭐️</span>
+              </div>
+              <div className="text-indigo-400 text-sm mt-1">Let these stars remind you: every ending is a new beginning.</div>
             </div>
           </motion.div>
         </section>
-        {/* Intro Paragraph */}
-        <motion.section
-          className="max-w-2xl mx-auto mt-10 mb-3 px-4"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.18 }}
-          viewport={{ once: true, amount: 0.6 }}
-        >
-          <blockquote className="border-l-4 border-indigo-400 bg-indigo-800/60 rounded-lg px-6 py-5 text-indigo-200 text-lg md:text-xl shadow-lg font-medium italic mb-0">
-            “You stand at the threshold of possibility. As the final chapter unfolds, the path behind you glows with lessons learned, and the road ahead shimmers with opportunity.”
-          </blockquote>
-        </motion.section>
-        {/* Roadmap */}
+        {/* Inspirational Quote */}
+        <InspirationalQuote />
+        {/* Roadmap section and Journal Reflection */}
         <Roadmap />
+        <ReflectionTextarea
+          label="Reflection: What was my single greatest learning from this journey?"
+          placeholder="Write your insights from the journey..."
+          storageKey="journalReflectionCh3"
+        />
         {/* How Users Can Contribute */}
         <HowToContribute />
+        {/* Final Reflection */}
+        <motion.section
+          className="max-w-2xl mx-auto my-8 px-4"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.14 }}
+          viewport={{ once: true, amount: 0.4 }}
+        >
+          <div className="rounded-lg bg-indigo-900/70 p-7 shadow-lg">
+            <h3 className="text-indigo-100 font-bold text-xl mb-2">Your Turn:</h3>
+            <div className="text-indigo-300 font-medium mb-3">
+              What vision will drive your next chapter?<br />
+              How will you turn today’s ideas into tomorrow’s reality?
+            </div>
+            <ReflectionTextarea
+              label="Closing Thoughts"
+              placeholder="Write your closing thoughts here..."
+              storageKey="finalReflectionCh3"
+            />
+          </div>
+        </motion.section>
         {/* CTA Button */}
         <motion.div
           className="flex justify-center my-10"
@@ -233,3 +354,5 @@ export default function ChapterThree() {
     </div>
   );
 }
+
+// File is getting quite long. Please consider asking to refactor this page into smaller, more manageable components!
