@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   ComposableMap,
@@ -9,16 +8,15 @@ import {
 import { LandmarkModal } from "./LandmarkModal";
 import { Star } from "lucide-react";
 
-// World topojson (public domain, tiny topojson version for performance)
-const GEO_URL =
-  "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries-sans-antarctica.json";
+// World topojson from a reliable CDN
+const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 // 11 landmarks: 7 ancient wonders + 4 modern icons
 const LANDMARKS = [
   {
     title: "Great Pyramid of Giza",
     country: "Egypt",
-    img: "https://example.com/pyramids.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Great+Pyramid",
     description:
       "The oldest and last surviving Wonder of the Ancient World.",
     coordinates: [31.1342, 29.9792], // [lon, lat]
@@ -27,7 +25,7 @@ const LANDMARKS = [
   {
     title: "Hanging Gardens of Babylon",
     country: "Iraq (Ancient Babylon)",
-    img: "https://example.com/babylon.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Hanging+Gardens",
     description:
       "A legendary garden near the Euphrates, famed for its ascending terraces.",
     coordinates: [44.4200, 32.5364],
@@ -36,7 +34,7 @@ const LANDMARKS = [
   {
     title: "Mausoleum at Halicarnassus",
     country: "Turkey",
-    img: "https://example.com/halicarnassus.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Mausoleum",
     description:
       "An ornate tomb near Bodrum, one of the greatest achievements of Greek architecture.",
     coordinates: [27.4241, 37.0386],
@@ -45,7 +43,7 @@ const LANDMARKS = [
   {
     title: "Statue of Zeus at Olympia",
     country: "Greece",
-    img: "https://example.com/zeus.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Statue+of+Zeus",
     description:
       "A giant seated statue honoring the Greek god, crafted by Phidias.",
     coordinates: [22.5361, 37.6386],
@@ -54,7 +52,7 @@ const LANDMARKS = [
   {
     title: "Temple of Artemis at Ephesus",
     country: "Turkey",
-    img: "https://example.com/artemis.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Temple+of+Artemis",
     description:
       "A magnificent marble temple dedicated to the goddess Artemis in Ephesus.",
     coordinates: [27.3415, 37.9391],
@@ -63,7 +61,7 @@ const LANDMARKS = [
   {
     title: "Colossus of Rhodes",
     country: "Greece",
-    img: "https://example.com/rhodes.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Colossus+of+Rhodes",
     description:
       "A towering statue of the sun god Helios at the Rhodes harbor entrance.",
     coordinates: [28.2278, 36.4510],
@@ -72,7 +70,7 @@ const LANDMARKS = [
   {
     title: "Lighthouse of Alexandria",
     country: "Egypt",
-    img: "https://example.com/alexandria.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Lighthouse",
     description:
       "The ancient world's most famous lighthouse on the island of Pharos.",
     coordinates: [29.8853, 31.2135],
@@ -81,7 +79,7 @@ const LANDMARKS = [
   {
     title: "Eiffel Tower",
     country: "France",
-    img: "https://example.com/eiffel.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Eiffel+Tower",
     description:
       "Paris' iconic iron tower of world expositions and romance.",
     coordinates: [2.2945, 48.8584],
@@ -90,7 +88,7 @@ const LANDMARKS = [
   {
     title: "Louvre Museum",
     country: "France",
-    img: "https://example.com/louvre.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Louvre+Museum",
     description:
       "The world's largest art museum and a historic monument in Paris.",
     coordinates: [2.3376, 48.8606],
@@ -99,7 +97,7 @@ const LANDMARKS = [
   {
     title: "Times Square Clock Tower (NYC)",
     country: "USA",
-    img: "https://example.com/nyc.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Times+Square",
     description:
       "New York's famous crossroads: neon lights, crowds, and energy.",
     coordinates: [-73.9855, 40.758],
@@ -108,7 +106,7 @@ const LANDMARKS = [
   {
     title: "Mount Fuji",
     country: "Japan",
-    img: "https://example.com/fuji.jpg",
+    img: "https://placehold.co/600x400/1e293b/a5b4fc/png?text=Mount+Fuji",
     description:
       "Snow-capped sacred mountain; Japan’s symbol of natural beauty.",
     coordinates: [138.7274, 35.3606],
