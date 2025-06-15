@@ -16,12 +16,12 @@ export default function CosmicCompass() {
             Explore the world’s wonders and unlock your journey
           </div>
         </div>
-        {/* Map Panel */}
+        {/* Only Map Panel */}
         <div className="w-full max-w-5xl flex-1">
           <CosmicMap />
         </div>
       </div>
-      {/* Mobile adjustment: reduce map height and make modal slide-up via dialog's responsiveness */}
+      {/* No duplicate headings, subtitle, or progress bar */}
     </div>
   );
 }
