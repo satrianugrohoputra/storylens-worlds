@@ -24,20 +24,35 @@ function useTypewriter(text: string, delay = 26) {
   return displayed;
 }
 
-// HERO COMPONENT
 export const Hero: React.FC = () => {
   const t = useTypewriter("Welcome to StoryLens Worlds 🌌", 34);
+
+  // Fetch and store Lottie animation data from remote URL
+  const [animationData, setAnimationData] = useState<object | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(LOTTIE_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) setAnimationData(data);
+      })
+      .catch(() => setAnimationData(null));
+    return () => { cancelled = true; };
+  }, []);
+
   return (
     <section id="hero" className="relative flex flex-col w-full min-h-[98vh] items-center justify-center pt-24 pb-32 z-10">
       <div className="absolute inset-0 w-full h-full -z-1 pointer-events-none">
-        {/* Use LOTTIE_URL directly as the animationData prop */}
-        <Lottie
-          path={LOTTIE_URL}
-          loop
-          autoplay
-          style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.93 }}
-          rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
-        />
+        {animationData && (
+          <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.93 }}
+            rendererSettings={{ preserveAspectRatio: "xMidYMid slice" }}
+          />
+        )}
       </div>
       <h1 className="relative z-10 font-extrabold text-4xl md:text-6xl tracking-tight text-white drop-shadow-2xl animate-typewriter">
         {t}
