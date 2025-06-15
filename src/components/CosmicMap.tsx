@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { LandmarkModal } from "./LandmarkModal";
-import { Check, MapPin } from "lucide-react";
+import { Check } from "lucide-react";
 
-// World map background PNG (public domain: https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png)
+// World map background PNG
 const MAP_IMAGE =
   "https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png";
 
@@ -71,10 +70,9 @@ const LANDMARKS = [
   },
 ];
 
-// User's unlocked progress. For demo, the first 4 unlocked:
-const userProgress = [0, 1, 2, 4]; // Indices of unlocked
+// User's unlocked progress (for "Visited" badge only)
+const userProgress = [0, 1, 2, 4];
 
-// Responsive modal direction detection (mobile/desktop)
 function isMobile() {
   if (typeof window === "undefined") return false;
   return window.innerWidth < 768;
@@ -115,9 +113,10 @@ export const CosmicMap: React.FC = () => {
                 absolute group flex flex-col items-center 
                 z-10 select-none pointer-events-auto
                 transition-transform
+                hover:scale-110 active:scale-95
                 ${unlocked 
-                  ? "hover:scale-110 active:scale-95"
-                  : "opacity-50 cursor-not-allowed"
+                  ? ""
+                  : "opacity-50"
                 }
               `}
               style={{
@@ -125,9 +124,8 @@ export const CosmicMap: React.FC = () => {
                 top: `calc(${lm.coords[1] / MAP_H * 100}% - 32px)`,
                 transition: "transform 0.2s"
               }}
-              disabled={!unlocked}
-              tabIndex={unlocked ? 0 : -1}
-              onClick={() => unlocked && setSelected(i)}
+              tabIndex={0}
+              onClick={() => setSelected(i)}
               aria-label={lm.title}
             >
               {/* Glow / pulse ring */}
@@ -155,7 +153,7 @@ export const CosmicMap: React.FC = () => {
                   </span>
                 )}
               </span>
-              {/* Animated pulse */}
+              {/* Animated pulse (only unlocked) */}
               {unlocked && <span className="absolute inset-0 rounded-full animate-pulse bg-yellow-200/10 pointer-events-none"></span>}
               {/* Tooltip */}
               <span className={`
@@ -171,12 +169,9 @@ export const CosmicMap: React.FC = () => {
           );
         })}
       </div>
-      {/* Animated lines between unlocked? */}
-      {/* Bonus: You could add animated SVG lines between unlocked landmarks here */}
       {/* Progress bar top-right */}
       <div className="absolute top-4 right-4 flex flex-col items-end gap-2 z-20">
         <div className="bg-black/50 backdrop-blur-md rounded-full px-5 py-2 flex items-center gap-2 shadow-lg">
-          {/* Glowing earth icons or colored dots for each landmark progress */}
           {LANDMARKS.map((_, i) => (
             <span key={i}
               className={
