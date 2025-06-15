@@ -21,7 +21,7 @@ const chapterData = [
     bullets: [
       "Origins of the story – how it all started",
       "First challenge faced",
-      "The "aha!" moment",
+      'The "aha!" moment',
     ],
     audioText:
       "Welcome, traveler. Every great adventure starts with a single step into the unknown. Here, you'll discover the spark that ignites innovation. Origins of the story, first challenge faced, and that unforgettable 'aha!' moment.",
@@ -57,7 +57,7 @@ const chapterData = [
     bullets: [
       "Roadmap for next steps",
       "How users can contribute (feedback, share link)",
-      "Call to action button: "Start Your Own Story"",
+      "Call to action button: 'Start Your Own Story'",
     ],
     audioText: "",
     hasAudio: false,
