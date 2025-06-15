@@ -24,6 +24,18 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
   landmark,
   isMobile
 }) => {
+  const [isPortrait, setIsPortrait] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsPortrait(false); // reset state when opening new modal
+  }, [landmark?.img]);
+
+  // This fn is called when the image loads to detect natural orientation
+  const handleImgLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    setIsPortrait(img.naturalHeight > img.naturalWidth);
+  };
+
   if (!landmark) return null;
 
   return (
@@ -44,17 +56,36 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
         }}
       >
         <div className="flex flex-col items-center w-full px-0 pt-0 pb-5 gap-0">
-          {/* Hero image: dominant center, with soft border and rounded */}
+          {/* Hero image: show whole photo, never distort/crop tall images */}
           <div className="w-full aspect-[5/4] rounded-t-2xl overflow-hidden bg-black/80 flex items-center justify-center border-b-2 border-indigo-800">
             <img
               src={landmark.img}
               alt={landmark.title}
               loading="lazy"
-              className="object-cover w-full h-full"
+              className={`
+                w-full h-full
+                ${
+                  isPortrait
+                    ? "object-contain"
+                    : "object-cover"
+                }
+                object-center
+                bg-black
+                transition-all
+                duration-200
+                rounded-t-2xl
+                select-none
+                mx-auto
+                block
+              `}
               style={{
+                maxHeight: "100%",
+                maxWidth: "100%",
                 objectPosition: "center",
+                backgroundColor: "#000",
               }}
               draggable={false}
+              onLoad={handleImgLoad}
             />
           </div>
           {/* Content below image */}
