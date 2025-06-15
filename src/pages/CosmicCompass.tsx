@@ -1,19 +1,27 @@
 
 import React from "react";
 import { MainNavbar } from "../components/MainNavbar";
+import { CosmicMap } from "../components/CosmicMap";
 
 export default function CosmicCompass() {
   return (
     <div className="min-h-screen bg-black relative pb-10">
       <MainNavbar />
-      <div className="flex flex-col items-center justify-center min-h-[78vh] pt-32">
-        <h1 className="text-4xl font-bold text-indigo-200 tracking-wide text-center mb-4 drop-shadow-md">
-          Cosmic Compass
-        </h1>
-        <div className="text-lg text-indigo-300/80 text-center max-w-xl mx-auto mb-4">
-          Chart your cosmic course. (Content coming soon!)
+      <div className="flex flex-col items-center w-full pt-28 pb-10">
+        <div className="mb-2">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-indigo-200 tracking-wide text-center mb-3 drop-shadow-md">
+            Cosmic Compass
+          </h1>
+          <div className="text-xl sm:text-2xl text-indigo-300/80 text-center max-w-2xl mx-auto mb-6 font-medium">
+            Explore the world’s wonders and unlock your journey
+          </div>
+        </div>
+        {/* Map Panel */}
+        <div className="w-full max-w-5xl flex-1">
+          <CosmicMap />
         </div>
       </div>
+      {/* Mobile adjustment: reduce map height and make modal slide-up via dialog's responsiveness */}
     </div>
   );
 }
