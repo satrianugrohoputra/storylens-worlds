@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -44,3 +43,14 @@
   }
 }
 
+/* Extra for ripple/glow star/button effects */
+.glow-star {
+  filter: drop-shadow(0 0 28px #fde04788) drop-shadow(0 0 12px #facc15ce);
+}
+
+.hover-scale {
+  transition: transform 0.18s cubic-bezier(.79,.21,.32,.89);
+}
+.hover-scale:hover {
+  transform: scale(1.08) translateY(-4px);
+}

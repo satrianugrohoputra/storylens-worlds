@@ -1,110 +1,102 @@
-
-import Navbar from "../components/Navbar";
+import React, { useState, useEffect } from "react";
+import { ParticleBg } from "../components/ParticleBg";
+import { Hero } from "../components/Hero";
+import { SVGLogoMorph } from "../components/SVGLogoMorph";
+import { ChapterCard } from "../components/ChapterCard";
+import { ProgressChart } from "../components/ProgressChart";
+import { AudioControl } from "../components/AudioControl";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { LocaleSwitcher } from "../components/LocaleSwitcher";
 import Footer from "../components/Footer";
-import { Chapter } from "../components/Chapter";
-import { ProgressBar } from "../components/ProgressBar";
-import { ParticleBackground } from "../components/ParticleBackground";
-import { useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
 
-const chapters = [
+const chapterData = [
   {
     id: "chapter-1",
-    title: "Beyond the Frame",
+    title: "The Journey Begins",
     content: [
-      "Welcome to StoryLens 3D, where every chapter comes alive.",
-      "Scroll to advance through narrative and interactive 3D scenes combined.",
+      "Embark on an inspirational adventure.",
+      "Every moment sparkles with possibility.",
     ],
-    variant: "cube" as const,
-    bgColor: "bg-gradient-to-r from-indigo-900 via-indigo-800 to-indigo-700",
   },
   {
     id: "chapter-2",
-    title: "From Still to Motion",
+    title: "Through the Portal",
     content: [
-      "3D objects break out of the flat page. Rotate and zoom to explore.",
-      "Each model is here for you—no two stories look the same.",
-    ],
-    variant: "sphere" as const,
-    bgColor: "bg-gradient-to-r from-fuchsia-900 via-indigo-900 to-indigo-700",
-    reverse: true,
+      "Step into the unknown—but also within.",
+      "New worlds await: see, listen, feel.",
+    ]
   },
   {
     id: "chapter-3",
-    title: "Immersion Unlocked",
+    title: "Unveiling Light",
     content: [
-      "Scroll triggers scene changes: backgrounds, animations, and text morph as you navigate.",
-      "Try clicking chapter dots for instant jumps.",
-    ],
-    variant: "torus" as const,
-    bgColor: "bg-gradient-to-r from-indigo-900 via-cyan-900 to-indigo-900",
+      "Let luminous stories illuminate your path.",
+      "Legends and dreams swirl in cosmic dance.",
+    ]
   },
-  {
-    id: "chapter-4",
-    title: "Ready? Begin Your Story.",
-    content: [
-      "StoryLens 3D is now open-source. Replace models and chapters to make your own.",
-      "Scroll once more, and let your story unfold.",
-    ],
-    variant: "cube" as const,
-    bgColor: "bg-gradient-to-r from-gray-900 via-indigo-800 to-blue-900",
-    reverse: true,
-  }
 ];
 
-const Index = () => {
+export default function Index() {
+  // For tracking scroll progress and bookmarks
+  const [completed, setCompleted] = useState<number>(0);
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      return JSON.parse(localStorage.getItem("bookmarks") || "[]");
+    }
+    return [];
+  });
+  const [locale, setLocale] = useState<"en" | "id">("en");
+  // Detect chapter completion on scroll
   useEffect(() => {
-    window.scrollTo(0,0);
+    const onScroll = () => {
+      let done = 0;
+      chapterData.forEach((c, i) => {
+        const el = document.getElementById(c.id);
+        if (el && window.scrollY + window.innerHeight / 2 > el.offsetTop) {
+          done = i + 1;
+        }
+      });
+      setCompleted(done);
+    };
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  // Keep bookmarks in localStorage
+  useEffect(() => {
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+  }, [bookmarks]);
+
   return (
-    <div className="w-full min-h-screen bg-black relative overflow-x-hidden selection:bg-indigo-400/60 selection:text-white">
-      <ParticleBackground />
-      <Navbar />
-      <ProgressBar chapters={chapters.map(c => ({ id: c.id, label: c.title }))} />
-      {/* HERO SECTION */}
-      <section className="w-full min-h-screen flex flex-col items-center justify-center text-center gap-5 relative z-10
-        bg-gradient-to-br from-black via-indigo-900 to-blue-900 pt-32 pb-12">
-        <motion.h1
-          initial={{ opacity: 0, y: 40, scale: 0.92 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, type: "spring", delay: 0.15 }}
-          className="font-extrabold text-5xl md:text-7xl tracking-tight text-white drop-shadow-xl"
-        >
-          StoryLens <span className="text-indigo-400">3D</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 35 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 50 }}
-          className="text-xl md:text-2xl max-w-xl text-white/70 font-medium"
-        >
-          A scroll-driven narrative with interactive 3D moments. Scroll to begin your journey.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 18 }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "reverse",
-            duration: 1.2,
-            delay: 1.2,
-          }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center"
-        >
-          <span className="text-white/80 text-sm mb-2 animate-pulse">Scroll to begin</span>
-          <ArrowDown className="w-8 h-8 text-indigo-300 animate-bounce" strokeWidth={2.5} />
-        </motion.div>
-      </section>
-      {/* CHAPTER SECTIONS */}
-      <main className="w-full">
-        {chapters.map((chapter, idx) => (
-          <Chapter key={chapter.id} {...chapter} />
-        ))}
+    <div className="bg-black min-h-screen font-sans transition-colors duration-500 relative overflow-x-hidden selection:bg-indigo-400/70 selection:text-white">
+      <ParticleBg />
+      <SVGLogoMorph />
+      <ThemeToggle />
+      <LocaleSwitcher locale={locale} setLocale={setLocale} />
+      <AudioControl />
+      <main>
+        <Hero />
+        <div className="relative z-10 max-w-2xl mx-auto py-10 flex flex-col gap-12">
+          <ProgressChart completed={completed} total={chapterData.length} bookmarks={bookmarks} />
+          {chapterData.map((chapter, idx) => (
+            <ChapterCard
+              key={chapter.id}
+              {...chapter}
+              bookmarked={bookmarks.includes(chapter.id)}
+              setBookmarked={on => {
+                setBookmarks(bm => {
+                  const next = new Set(bm);
+                  if (on) next.add(chapter.id);
+                  else next.delete(chapter.id);
+                  return Array.from(next);
+                });
+              }}
+              locale={locale}
+            />
+          ))}
+        </div>
       </main>
       <Footer />
     </div>
   );
-};
-
-export default Index;
+}
