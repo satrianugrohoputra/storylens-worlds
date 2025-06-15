@@ -1,6 +1,5 @@
-
 import React, { useRef, useState } from "react";
-import { Play, Music, Icon } from "lucide-react";
+import { Play, Stop, Music } from "lucide-react";
 
 const SPOTIFY_EMBED_URL =
   "https://open.spotify.com/embed/track/2gmWJA9oF4GD2Vw5QoRqu1?utm_source=generator&theme=0";
@@ -8,22 +7,16 @@ const SPOTIFY_EMBED_URL =
 export const SpotifyPlayerBox: React.FC = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  // Workaround: programmatically start/stop music box via visibility
-  // (Direct control of Spotify embed playback is not available for public embeds)
-  // So we'll hide (stop) or show (play) the iframe
-  // When stopped, we reset src to truly stop audio
-
-  const [iframeKey, setIframeKey] = useState(0); // Changes to force reload
+  const [iframeKey, setIframeKey] = useState(0);
 
   const handlePlay = () => {
     setIsPlaying(true);
-    setIframeKey(k => k + 1); // reloads iframe if needed
+    setIframeKey((k) => k + 1);
   };
 
   const handleStop = () => {
     setIsPlaying(false);
-    setIframeKey(k => k + 1);
+    setIframeKey((k) => k + 1);
   };
 
   return (
@@ -63,7 +56,7 @@ export const SpotifyPlayerBox: React.FC = () => {
           disabled={!isPlaying}
           title="Stop Music"
         >
-          <Icon name="stop" size={20} className="mr-1" />
+          <Stop size={20} className="mr-1" />
           Stop
         </button>
       </div>
