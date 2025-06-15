@@ -1,14 +1,15 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Music, BookOpen, Home, Archive } from "lucide-react";
+import { Music, BookOpen, Home, Archive, Compass } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { name: "Main Page", to: "/", icon: Home },
   { name: "Chapter Progress", to: "#chapter-progress", icon: BookOpen },
   { name: "Music Box", to: "#music-box", icon: Music },
-  { name: "Astro Archive", to: "/astro-archive", icon: Archive }
+  { name: "Astro Archive", to: "/astro-archive", icon: Archive },
+  { name: "Cosmic Compass", to: "/cosmic-compass", icon: Compass }
 ];
 
 export const MainNavbar: React.FC = () => {

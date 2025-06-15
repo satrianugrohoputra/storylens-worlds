@@ -11,6 +11,7 @@ import ChapterOne from "./pages/ChapterOne";
 import ChapterTwo from "./pages/ChapterTwo";
 import ChapterThree from "./pages/ChapterThree";
 import AstroArchive from "./pages/AstroArchive";
+import CosmicCompass from "./pages/CosmicCompass";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/library" element={<Library />} />
           <Route path="/astro-archive" element={<AstroArchive />} />
+          <Route path="/cosmic-compass" element={<CosmicCompass />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
