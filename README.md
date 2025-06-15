@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
 
-## Project info
+# StoryLens 3D
 
-**URL**: https://lovable.dev/projects/e9d1446a-573b-4b98-8b14-1244c4efccdd
+A production-ready, scroll-driven narrative site that merges text, animation, and live interactive 3D using React + TypeScript, Tailwind, React-Three-Fiber, and Framer Motion.
 
-## How can I edit this code?
+## Live demo
 
-There are several ways of editing your application.
+**TODO:** Deploy to Vercel/Netlify and add your link here.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e9d1446a-573b-4b98-8b14-1244c4efccdd) and start prompting.
+## 🚀 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+```bash
+# Clone repository & install dependencies
+npm install
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start Vite development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at http://localhost:8080
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📁 Folder Structure (Relevant Parts)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+  components/
+    Navbar.tsx
+    Chapter.tsx
+    ModelViewer.tsx
+    ProgressBar.tsx
+    Footer.tsx
+    ParticleBackground.tsx
+  pages/
+    Index.tsx
+    about.tsx
+    library.tsx
+  assets/
+    models/
+      place-your-glb-or-gltf-here.glb
+  styles/
+    globals.css
+  App.tsx
+  main.tsx
+...
+```
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🖼️ Adding/Using 3D Models
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- Put your `.glb` or `.gltf` model files in `src/assets/models/`
+- Reference them in chapters with a relative path, e.g.:
 
-## How can I deploy this project?
+```ts
+modelUrl: "/src/assets/models/your-model.glb"
+```
 
-Simply open [Lovable](https://lovable.dev/projects/e9d1446a-573b-4b98-8b14-1244c4efccdd) and click on Share -> Publish.
+- For an online model browser, add more to `/pages/library.tsx`
+- Replace `sample-cube.glb` with your own—try free assets from [poly.pizza](https://poly.pizza/) or [sketchfab.com](https://sketchfab.com/)
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## ✨ Features
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- Scroll-based chapter reveals (typewriter, fade, slide-up)
+- Background gradient or animated particle/star canvas
+- Fully interactive 3D viewer (rotate, zoom)
+- Scroll progress bar with jump-to-chapter dots
+- Responsive split or stacked layouts
+- All styles via Tailwind (see `src/styles/globals.css`)
+- Add more chapters, new models, or pages as desired!
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+
+## 🛠️ Tech Stack
+
+- React, TypeScript, Tailwind, shadcn/ui
+- 3D: @react-three/fiber, @react-three/drei
+- Animations: framer-motion
+- Routing: react-router-dom
+
+---
+
+## 📦 Production & Deployment
+
+- `npm run build` for optimized static build, ready for Vercel or Netlify.
+- No API keys or backend required.
+- Customize chapters/text by editing `src/pages/Index.tsx` and model assets.
+
