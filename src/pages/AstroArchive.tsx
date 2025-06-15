@@ -20,15 +20,28 @@ const GALLERY = [
   },
 ];
 
+export type Inspiration = {
+  image: string;
+  title: string;
+  quote: string;
+  description?: string;
+};
+
 export default function AstroArchive() {
   const [modalIdx, setModalIdx] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
 
+  // State for user-uploaded inspirations
+  const [userInspirations, setUserInspirations] = useState<Inspiration[]>([]);
+
+  // Show modal for built-in or user items
+  const allInspirations = [...GALLERY, ...userInspirations];
+
+  // Modal selected index includes both built-in and user items
   return (
     <div className="relative min-h-screen w-full bg-black overflow-x-hidden flex flex-col items-center justify-start">
       {/* Animated Starfield and Nebula BG */}
       <div className="fixed inset-0 -z-10 pointer-events-none animate-fade-in bg-gradient-to-b from-black via-indigo-950/95 to-black">
-        {/* Simple animated space effect using gradients */}
         <div
           className="absolute inset-0 opacity-80"
           style={{
@@ -58,7 +71,7 @@ export default function AstroArchive() {
           className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-8"
           style={{ minHeight: "360px" }}
         >
-          {GALLERY.map((item, idx) => (
+          {allInspirations.map((item, idx) => (
             <AstroGalleryCard
               key={idx}
               image={item.image}
@@ -75,15 +88,28 @@ export default function AstroArchive() {
         <AstroGalleryModal
           open={modalIdx !== null}
           onOpenChange={open => setModalIdx(open ? modalIdx : null)}
-          image={GALLERY[modalIdx].image}
-          title={GALLERY[modalIdx].title}
-          quote={GALLERY[modalIdx].quote}
-          description={GALLERY[modalIdx].description}
+          image={allInspirations[modalIdx].image}
+          title={allInspirations[modalIdx].title}
+          quote={allInspirations[modalIdx].quote}
+          description={allInspirations[modalIdx].description}
         />
       )}
 
       {/* Add Inspiration modal */}
-      <AstroAddInspirationModal open={showAdd} onOpenChange={setShowAdd} />
+      <AstroAddInspirationModal
+        open={showAdd}
+        onOpenChange={setShowAdd}
+        onInspiration={(inspiration: Omit<Inspiration, "title">) => {
+          // We'll use the quote as title for "caption" purposes
+          setUserInspirations((prev) => [
+            ...prev,
+            {
+              ...inspiration,
+              title: inspiration.quote,
+            },
+          ]);
+        }}
+      />
 
       {/* Floating Add Button */}
       <button
@@ -106,3 +132,4 @@ export default function AstroArchive() {
     </div>
   );
 }
+
