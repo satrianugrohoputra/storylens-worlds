@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   ComposableMap,
@@ -76,6 +75,7 @@ export const CosmicMap: React.FC = () => {
   const [selected, setSelected] = useState<number | null>(null);
   const [geoReady, setGeoReady] = useState(false);
   const [geoError, setGeoError] = useState(false);
+  const [visited, setVisited] = useState<number[]>([]);
 
   useEffect(() => {
     setGeoError(false);
@@ -87,6 +87,13 @@ export const CosmicMap: React.FC = () => {
       .then(() => setGeoReady(true))
       .catch(() => setGeoError(true));
   }, []);
+
+  const handleLandmarkClick = (idx: number) => {
+    setSelected(idx);
+    setVisited((prev) =>
+      prev.includes(idx) ? prev : [...prev, idx]
+    );
+  };
 
   if (geoError) {
     return (
@@ -102,7 +109,7 @@ export const CosmicMap: React.FC = () => {
       {/* Landmarks counter */}
       <div className="absolute left-4 top-4 z-10 flex flex-col items-start">
         <span className="px-2 py-1 rounded-lg bg-indigo-900 text-indigo-100 font-semibold text-sm shadow border border-indigo-400/30">
-          Landmarks visited: {selected !== null ? 1 : 0}/{LANDMARKS.length}
+          Landmarks visited: {visited.length}/{LANDMARKS.length}
         </span>
       </div>
       {/* Map Panel */}
@@ -145,12 +152,14 @@ export const CosmicMap: React.FC = () => {
               <Marker key={lm.name} coordinates={lm.coords}>
                 <circle
                   r={13}
-                  className="stroke-yellow-400 fill-yellow-300/90 cursor-pointer hover:fill-green-300 hover:stroke-green-500 transition"
+                  className={`stroke-yellow-400 fill-yellow-300/90 cursor-pointer hover:fill-green-300 hover:stroke-green-500 transition ${
+                    visited.includes(idx) ? "fill-green-300/90 stroke-green-400" : ""
+                  }`}
                   style={{
                     filter: "drop-shadow(0 2px 6px #eab30899)",
                   }}
                   strokeWidth={3}
-                  onClick={() => setSelected(idx)}
+                  onClick={() => handleLandmarkClick(idx)}
                   tabIndex={0}
                 />
                 {/* SCREENREADER title for accessibility */}
