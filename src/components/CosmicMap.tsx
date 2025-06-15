@@ -116,9 +116,6 @@ export const CosmicMap: React.FC = () => {
     setSelected(i);
   }
 
-  // Count explored
-  const exploredCount = unlocked.length;
-
   return (
     <div
       ref={containerRef}
@@ -227,24 +224,6 @@ export const CosmicMap: React.FC = () => {
             </button>
           );
         })}
-      </div>
-      {/* Progress bar top-right */}
-      <div className="absolute top-4 right-4 flex flex-col items-end gap-2 z-20">
-        <div className="bg-black/50 backdrop-blur-md rounded-full px-5 py-2 flex items-center gap-2 shadow-lg">
-          {LANDMARKS.map((_, i) => (
-            <span key={i}
-              className={
-                "mr-1 w-4 h-4 rounded-full inline-block transition shadow " +
-                (unlocked.includes(i)
-                  ? "bg-yellow-400 drop-shadow-[0_0_6px_#fde047d6]"
-                  : "bg-gray-400 bg-opacity-30")
-              }
-            />
-          ))}
-          <span className="ml-2 font-bold text-indigo-100 text-base">
-            Landmarks Explored: {exploredCount} / {LANDMARKS.length}
-          </span>
-        </div>
       </div>
       {/* Landmark Modal */}
       <LandmarkModal
