@@ -77,4 +77,33 @@ export const landmarks = [
     image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Prospect_of_Mt_Fuji.jpg",
     description: "Japan’s iconic stratovolcano and highest peak at 3,776 m, revered in art & culture."
   },
+  // Tambahan 4 landmark baru
+  {
+    id: 12,
+    name: "Christ the Redeemer",
+    coords: [-43.2105, -22.9519],
+    image: "https://upload.wikimedia.org/wikipedia/commons/0/06/Cristo_Redentor_-_Rio_de_Janeiro%2C_Brasil.jpg",
+    description: "Famous Art Deco statue of Jesus Christ in Rio de Janeiro, Brazil."
+  },
+  {
+    id: 13,
+    name: "Petra",
+    coords: [35.4444, 30.3285],
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Al_Khazneh_Petra_edit.jpg",
+    description: "Ancient rock-cut city in Jordan, known for its rose-colored façades."
+  },
+  {
+    id: 14,
+    name: "Sydney Opera House",
+    coords: [151.2153, -33.8568],
+    image: "https://upload.wikimedia.org/wikipedia/commons/4/40/Sydney_Opera_House_-_Dec_2008.jpg",
+    description: "Iconic performing arts center with sail-like design on Sydney’s harbor."
+  },
+  {
+    id: 15,
+    name: "Angkor Wat",
+    coords: [103.8667, 13.4125],
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/a1/Angkor_Wat_temple.jpg",
+    description: "Massive temple complex in Cambodia, symbol of Khmer architecture."
+  },
 ];

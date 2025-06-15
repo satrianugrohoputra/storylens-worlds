@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 type Landmark = {
   id: number;
@@ -19,7 +19,23 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
   onClose,
   landmark,
 }) => {
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [imgError, setImgError] = useState(false);
+
+  React.useEffect(() => {
+    // Reset state setiap landmark/modal dibuka tutup
+    setIsImageLoading(true);
+    setImgError(false);
+  }, [landmark, open]);
+
   if (!open || !landmark) return null;
+
+  const handleImgError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    setImgError(true);
+    e.currentTarget.src = "/placeholder.svg"; // fallback ke public/placeholder.svg
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -32,14 +48,34 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
           &times;
         </button>
         <div className="aspect-[5/4] w-full rounded-lg overflow-hidden flex items-center justify-center mb-3 bg-gray-200">
-          <img
-            src={landmark.image}
-            alt={landmark.name}
-            className="object-cover object-center w-full h-full select-none rounded-lg"
-            loading="lazy"
-            draggable={false}
-            style={{ maxHeight: 300, maxWidth: "100%" }}
-          />
+          {/* Skeleton Loader saat loading, fallback jika error */}
+          {landmark.image && !imgError ? (
+            <>
+              {isImageLoading && (
+                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-300 animate-pulse z-0">
+                  <span className="text-xs text-gray-400">Loading...</span>
+                </div>
+              )}
+              <img
+                src={landmark.image}
+                alt={landmark.name}
+                className="object-cover object-center w-full h-full select-none rounded-lg"
+                loading="lazy"
+                draggable={false}
+                style={{ maxHeight: 300, maxWidth: "100%", zIndex: 1 }}
+                onLoad={() => setIsImageLoading(false)}
+                onError={handleImgError}
+              />
+            </>
+          ) : (
+            <img
+              src="/placeholder.svg"
+              alt="Placeholder"
+              className="object-contain w-4/5 h-4/5 opacity-60"
+              draggable={false}
+              style={{ maxHeight: 220 }}
+            />
+          )}
         </div>
         <h2 className="font-bold text-2xl text-indigo-900 mb-2 text-center">{landmark.name}</h2>
         <p className="text-gray-800 text-base text-center">{landmark.description}</p>
