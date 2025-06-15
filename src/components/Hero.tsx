@@ -1,10 +1,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "lottie-react";
-
 // Use any public Lottie (galaxy): Using a simple JSON for placeholder effect.
 // You can swap LOTTIE_URL for any animated swirl/galaxy from lottiefiles.com
 const LOTTIE_URL = "https://assets9.lottiefiles.com/packages/lf20_4kx2q32n.json";
+// Import the JSON animation statically for Vite compatibility
+import galaxyLottie from "../assets/galaxy-lottie.json";
 
 function useTypewriter(text: string, delay = 26) {
   const [displayed, setDisplayed] = useState("");
@@ -31,7 +32,7 @@ export const Hero: React.FC = () => {
     <section id="hero" className="relative flex flex-col w-full min-h-[98vh] items-center justify-center pt-24 pb-32 z-10">
       <div className="absolute inset-0 w-full h-full -z-1 pointer-events-none">
         <Lottie
-          animationData={require("../assets/galaxy-lottie.json")}
+          animationData={galaxyLottie}
           loop
           autoplay
           style={{ width: "100%", height: "100%", objectFit: "cover", opacity: 0.93 }}
