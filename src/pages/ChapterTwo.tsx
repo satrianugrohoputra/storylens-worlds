@@ -83,7 +83,7 @@ export default function ChapterTwo() {
           <Button
             size="lg"
             className="flex items-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white font-bold px-6 py-2 rounded-xl ring-2 ring-indigo-500/70 hover:scale-105 transition-all"
-            onClick={() => window.location.href = "/"}
+            onClick={() => navigate("/chapter/3")}
           >
             Next: Vision of Tomorrow
             <ArrowRight className="ml-2" size={20} />
@@ -112,3 +112,4 @@ function Typewriter({ text, delay = 30 }: { text: string, delay?: number }) {
   }, [text, delay]);
   return <span>{displayed}<span className="blinking-cursor text-indigo-300">|</span></span>;
 }
+

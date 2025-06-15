@@ -67,7 +67,7 @@ const chapterData = [
     hasPortalLottie: false,
     hasProgressChart: false,
     hasCta: true,
-    route: "", // not routable
+    route: "/chapter/3", // <--- CHANGED: now links to chapter 3!
   },
 ];
 
