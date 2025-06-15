@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import About from "./pages/about";
 import Library from "./pages/library";
+import ChapterOne from "./pages/ChapterOne";
+import ChapterTwo from "./pages/ChapterTwo";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/chapter/1" element={<ChapterOne />} />
+          <Route path="/chapter/2" element={<ChapterTwo />} />
           <Route path="/about" element={<About />} />
           <Route path="/library" element={<Library />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

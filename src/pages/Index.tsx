@@ -9,8 +9,8 @@ import { AudioControl } from "../components/AudioControl";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { LocaleSwitcher } from "../components/LocaleSwitcher";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
-// Full, rich content and interactivity for each StoryLens Worlds chapter
 const chapterData = [
   {
     id: "chapter-1",
@@ -30,6 +30,7 @@ const chapterData = [
     hasPortalLottie: false,
     hasProgressChart: false,
     hasCta: false,
+    route: "/chapter/1",
   },
   {
     id: "chapter-2",
@@ -47,6 +48,7 @@ const chapterData = [
     hasPortalLottie: true,
     hasProgressChart: false,
     hasCta: false,
+    route: "/chapter/2",
   },
   {
     id: "chapter-3",
@@ -65,6 +67,7 @@ const chapterData = [
     hasPortalLottie: false,
     hasProgressChart: false,
     hasCta: true,
+    route: "", // not routable
   },
 ];
 
@@ -109,33 +112,52 @@ export default function Index() {
         <Hero />
         <div className="relative z-10 max-w-2xl mx-auto py-10 flex flex-col gap-12">
           <ProgressChart completed={completed} total={chapterData.length} bookmarks={bookmarks} />
-          {chapterData.map((chapter, idx) => (
-            <ChapterCard
-              key={chapter.id}
-              id={chapter.id}
-              title={chapter.title}
-              content={chapter.content}
-              bullets={chapter.bullets}
-              audioText={chapter.audioText}
-              hasAudio={chapter.hasAudio}
-              hasBookmark={chapter.hasBookmark}
-              hasPortalLottie={chapter.hasPortalLottie}
-              hasProgressChart={chapter.hasProgressChart}
-              hasCta={chapter.hasCta}
-              bookmarked={bookmarks.includes(chapter.id)}
-              setBookmarked={on => {
-                setBookmarks(bm => {
-                  const next = new Set(bm);
-                  if (on) next.add(chapter.id);
-                  else next.delete(chapter.id);
-                  return Array.from(next);
-                });
-              }}
-              locale={locale}
-              chartProgress={completed}
-              totalChapters={chapterData.length}
-            />
-          ))}
+          {chapterData.map((chapter, idx) => {
+            // Only wrap chapters 1 and 2
+            const chapterCard = (
+              <ChapterCard
+                key={chapter.id}
+                id={chapter.id}
+                title={chapter.title}
+                content={chapter.content}
+                bullets={chapter.bullets}
+                audioText={chapter.audioText}
+                hasAudio={chapter.hasAudio}
+                hasBookmark={chapter.hasBookmark}
+                hasPortalLottie={chapter.hasPortalLottie}
+                hasProgressChart={chapter.hasProgressChart}
+                hasCta={chapter.hasCta}
+                bookmarked={bookmarks.includes(chapter.id)}
+                setBookmarked={on => {
+                  setBookmarks(bm => {
+                    const next = new Set(bm);
+                    if (on) next.add(chapter.id);
+                    else next.delete(chapter.id);
+                    return Array.from(next);
+                  });
+                }}
+                locale={locale}
+                chartProgress={completed}
+                totalChapters={chapterData.length}
+              />
+            );
+            if (chapter.route) {
+              return (
+                <Link
+                  to={chapter.route}
+                  key={chapter.id}
+                  className="rounded-xl shadow-xl ring-2 ring-indigo-400/0 hover:ring-indigo-300/70 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all group"
+                  tabIndex={0}
+                  aria-label={`View details of ${chapter.title}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {chapterCard}
+                </Link>
+              );
+            } else {
+              return chapterCard;
+            }
+          })}
         </div>
       </main>
       <Footer />
