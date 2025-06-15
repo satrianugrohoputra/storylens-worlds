@@ -1,4 +1,3 @@
-
 import React from "react";
 import { MainNavbar } from "../components/MainNavbar";
 import { CosmicMap } from "../components/CosmicMap";
@@ -21,7 +20,7 @@ export default function CosmicCompass() {
             Explore the world’s wonders and unlock your journey
           </div>
         </div>
-        {/* Only Map Panel */}
+        {/* Responsive Map Panel with Progress bar inside */}
         <div className="w-full max-w-5xl flex-1">
           <CosmicMap />
         </div>
