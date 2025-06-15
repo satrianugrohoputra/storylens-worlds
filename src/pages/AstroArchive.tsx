@@ -1,9 +1,10 @@
-
 import React, { useState } from "react";
 import { AstroGalleryCard } from "../components/AstroGalleryCard";
 import { AstroGalleryModal } from "../components/AstroGalleryModal";
 import { AstroAddInspirationModal } from "../components/AstroAddInspirationModal";
 import { Plus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const GALLERY = [
   {
@@ -40,6 +41,18 @@ export default function AstroArchive() {
   // Modal selected index includes both built-in and user items
   return (
     <div className="relative min-h-screen w-full bg-black overflow-x-hidden flex flex-col items-center justify-start">
+      {/* Back Button */}
+      <Link
+        to="/"
+        aria-label="Back to main page"
+        className="fixed top-5 left-5 z-40 bg-black/80 hover:bg-indigo-900/70 text-indigo-200 rounded-full shadow-lg p-3 transition-all hover:scale-105 focus-visible:ring-2 focus-visible:ring-indigo-400 flex items-center gap-2"
+        style={{
+          boxShadow: "0 0 24px 4px #6366f188, 0 3px 20px 2px #0008"
+        }}
+      >
+        <ArrowLeft size={24} className="mr-1" />
+        <span className="hidden sm:inline">Back</span>
+      </Link>
       {/* Animated Starfield and Nebula BG */}
       <div className="fixed inset-0 -z-10 pointer-events-none animate-fade-in bg-gradient-to-b from-black via-indigo-950/95 to-black">
         <div
@@ -132,4 +145,3 @@ export default function AstroArchive() {
     </div>
   );
 }
-
