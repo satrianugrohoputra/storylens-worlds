@@ -31,15 +31,18 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
 
   if (!open || !landmark) return null;
 
+  // URI-encode the image URL always!
+  const encodedImageSrc = encodeURI(landmark.image ?? "");
+
   const handleImgError = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     setImgError(true);
-    setErrorMsg("Could not load: " + landmark.image);
+    setErrorMsg("Could not load: " + encodedImageSrc);
     console.log(
       "[LANDMARK MODAL] IMAGE ERROR",
       landmark.name,
-      landmark.image,
+      encodedImageSrc,
       e
     );
     e.currentTarget.src = "/placeholder.svg";
@@ -53,7 +56,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
     console.log(
       "[LANDMARK MODAL] IMAGE LOADED",
       landmark.name,
-      landmark.image,
+      encodedImageSrc,
       e
     );
   };
@@ -78,7 +81,7 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
                 </div>
               )}
               <img
-                src={landmark.image}
+                src={encodedImageSrc}
                 alt={landmark.name}
                 className={`object-contain object-center w-full h-full select-none rounded-lg transition border-2 ${
                   imgError
