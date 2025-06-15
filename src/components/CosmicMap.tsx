@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { LandmarkModal } from "./LandmarkModal";
 import { Check } from "lucide-react";
 
@@ -7,17 +7,16 @@ const MAP_IMAGE =
   "https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.png";
 
 // Map dimensions in px (equirectangular projection)
-// This is 1920x958 for this Wikipedia image
 const MAP_W = 1920, MAP_H = 958;
 
-// Hardcoded landmark dataset: name/country, img, description, coords (pixel approx)
+// Landmarks data: name/country, img, description, coords (pixel)
 const LANDMARKS = [
   {
     title: "Great Pyramid of Giza",
     country: "Egypt",
     img: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Kheops-Pyramid.jpg",
     description: "The oldest and last surviving Wonder of the Ancient World.",
-    coords: [1057, 522], // Egypt in map image
+    coords: [1057, 522],
     key: "pyramid",
   },
   {
@@ -25,7 +24,7 @@ const LANDMARKS = [
     country: "France",
     img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80",
     description: "Paris' iconic iron tower of world expositions and romance.",
-    coords: [901, 363], // Paris
+    coords: [901, 363],
     key: "eiffel",
   },
   {
@@ -33,7 +32,7 @@ const LANDMARKS = [
     country: "Brazil",
     img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
     description: "The immense Art Deco statue watching over Rio de Janeiro.",
-    coords: [680, 733], // Rio
+    coords: [680, 733],
     key: "christ",
   },
   {
@@ -41,7 +40,7 @@ const LANDMARKS = [
     country: "Japan",
     img: "https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=600&q=80",
     description: "Snow-capped sacred mountain; Japan’s symbol of natural beauty.",
-    coords: [1668, 471], // Fuji
+    coords: [1668, 471],
     key: "fuji",
   },
   {
@@ -49,7 +48,7 @@ const LANDMARKS = [
     country: "USA",
     img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
     description: "New York’s famous crossroads: neon, crowds, and energy.",
-    coords: [388, 386], // NYC
+    coords: [388, 386],
     key: "times",
   },
   {
@@ -57,7 +56,7 @@ const LANDMARKS = [
     country: "Peru",
     img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80",
     description: "Lost Inca city atop the Andes—mystical and awe-inspiring.",
-    coords: [323, 683], // Peru
+    coords: [323, 683],
     key: "machu",
   },
   {
@@ -65,96 +64,136 @@ const LANDMARKS = [
     country: "Italy",
     img: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=600&q=80",
     description: "Rome’s ancient amphitheater, a monument to spectacle.",
-    coords: [1042, 430], // Rome
+    coords: [1042, 430],
     key: "colosseum",
   },
 ];
 
-// User's unlocked progress (for "Visited" badge only)
-const userProgress = [0, 1, 2, 4];
-
+// MOBILE DETECTION FUNCTION (keep as before)
 function isMobile() {
   if (typeof window === "undefined") return false;
   return window.innerWidth < 768;
 }
 
 export const CosmicMap: React.FC = () => {
+  // State for which landmarks are unlocked
+  const [unlocked, setUnlocked] = useState<number[]>([0, 1, 2, 4]);
   const [selected, setSelected] = useState<number | null>(null);
 
-  // Progress: number unlocked
-  const exploredCount = userProgress.length;
+  // For overlay scaling math
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState({ w: MAP_W, h: MAP_H });
+
+  // Track container size (for responsive marker positions)
+  useLayoutEffect(() => {
+    function update() {
+      if (!containerRef.current) return;
+      const width = containerRef.current.offsetWidth;
+      // Enforce exact 2:1 aspect (matches 1920x958 best as 2.004)
+      let height = width / 2;
+      // If parent's height restricted, ensure fit
+      if (containerRef.current.offsetHeight < height) {
+        height = containerRef.current.offsetHeight;
+      }
+      setScale({ w: width, h: height });
+    }
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // Handle unlocking any landmark (by index)
+  function unlockLandmark(i: number) {
+    if (!unlocked.includes(i)) {
+      setUnlocked((old) => [...old, i].sort((a, b) => a - b));
+    }
+    setSelected(i);
+  }
+
+  // Count explored
+  const exploredCount = unlocked.length;
 
   return (
-    <div className="relative w-full max-w-5xl aspect-[2/1] mx-auto rounded-2xl shadow-2xl overflow-hidden"
-      style={{ background: "linear-gradient(135deg,#000,#334155 60%,#4f46e5)" }}>
-      {/* World map image */}
+    <div
+      ref={containerRef}
+      className="
+        relative w-full aspect-[2/1] mx-auto rounded-2xl shadow-2xl overflow-hidden
+        bg-gradient-to-br from-indigo-950 via-indigo-800 to-slate-800"
+      style={{
+        minHeight: 240,
+        height: "min(65vw, 64vh)",
+        maxWidth: "100vw",
+      }}
+    >
+      {/* World map image fills the container */}
       <div className="absolute inset-0 w-full h-full z-0">
         <img
           src={MAP_IMAGE}
           alt="World Map"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center select-none"
           draggable={false}
           style={{
-            filter: "brightness(1.1) saturate(1.14) contrast(1.1)",
-            pointerEvents: "none"
+            filter: "brightness(1.12) saturate(1.16) contrast(1.08)",
+            pointerEvents: "none",
+            width: "100%",
+            height: "100%",
+            // Prevent draggable ghost images on mobile
+            userSelect: "none",
           }}
         />
       </div>
-      {/* Landmarks */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Landmarks overlay, scaled to map container */}
+      <div className="absolute inset-0 pointer-events-none w-full h-full">
         {LANDMARKS.map((lm, i) => {
-          const unlocked = userProgress.includes(i);
+          const isUnlocked = unlocked.includes(i);
+          // Calculate percent of coords in map image
+          const leftPx = (lm.coords[0] / MAP_W) * scale.w - 24;
+          const topPx = (lm.coords[1] / MAP_H) * scale.h - 32;
 
           return (
             <button
               key={lm.key}
               type="button"
               className={`
-                absolute group flex flex-col items-center 
+                absolute group flex flex-col items-center
                 z-10 select-none pointer-events-auto
                 transition-transform
                 hover:scale-110 active:scale-95
-                ${unlocked 
-                  ? ""
-                  : "opacity-50"
-                }
+                ${isUnlocked ? "" : "opacity-50"}
               `}
               style={{
-                left: `calc(${lm.coords[0] / MAP_W * 100}% - 24px)`,
-                top: `calc(${lm.coords[1] / MAP_H * 100}% - 32px)`,
-                transition: "transform 0.2s"
+                left: `${leftPx}px`,
+                top: `${topPx}px`,
+                transition: "transform 0.2s",
               }}
               tabIndex={0}
-              onClick={() => setSelected(i)}
+              onClick={() => unlockLandmark(i)}
               aria-label={lm.title}
             >
-              {/* Glow / pulse ring */}
+              {/* Glow / pulse ring for unlocked */}
               <span className={`block w-14 h-14 rounded-full absolute left-[-12px] top-[-8px] -z-10
-                ${unlocked ? "ring-2 ring-yellow-300/80 animate-pulse bg-yellow-100/15" : ""}`}>
-              </span>
+                ${isUnlocked ? "ring-2 ring-yellow-300/80 animate-pulse bg-yellow-100/15" : ""}
+              `}></span>
               {/* Image-based marker */}
-              <span className="shadow-lg border-2 border-white/80 rounded-full flex items-center justify-center overflow-hidden w-12 h-12 bg-white/10 transition-all duration-200">
+              <span className="shadow-lg border-2 border-white/80 rounded-full flex items-center justify-center overflow-hidden w-12 h-12 bg-white/10 transition-all duration-200 relative">
                 <img
                   src={lm.img}
                   alt={lm.title}
                   className={`
                     w-10 h-10 object-cover rounded-full
-                    ${unlocked
-                      ? "grayscale-0"
-                      : "grayscale brightness-90 opacity-80"
-                    }
+                    ${isUnlocked ? "grayscale-0" : "grayscale brightness-90 opacity-80"}
                   `}
                   draggable={false}
                 />
                 {/* Visited check */}
-                {unlocked && (
+                {isUnlocked && (
                   <span className="absolute bottom-1 right-1 bg-yellow-200 rounded-full p-1 shadow">
                     <Check className="w-3 h-3 text-yellow-900 drop-shadow" />
                   </span>
                 )}
               </span>
               {/* Animated pulse (only unlocked) */}
-              {unlocked && <span className="absolute inset-0 rounded-full animate-pulse bg-yellow-200/10 pointer-events-none"></span>}
+              {isUnlocked && <span className="absolute inset-0 rounded-full animate-pulse bg-yellow-200/10 pointer-events-none"></span>}
               {/* Tooltip */}
               <span className={`
                 pointer-events-none text-xs
@@ -176,7 +215,7 @@ export const CosmicMap: React.FC = () => {
             <span key={i}
               className={
                 "mr-1 w-4 h-4 rounded-full inline-block transition shadow " +
-                (userProgress.includes(i)
+                (unlocked.includes(i)
                   ? "bg-yellow-400 drop-shadow-[0_0_6px_#fde047d6]"
                   : "bg-gray-400 bg-opacity-30")
               }
@@ -193,7 +232,7 @@ export const CosmicMap: React.FC = () => {
         onOpenChange={open => setSelected(open ? selected : null)}
         landmark={selected !== null ? {
           ...LANDMARKS[selected],
-          unlocked: userProgress.includes(selected)
+          unlocked: unlocked.includes(selected)
         } : null}
         isMobile={typeof window !== "undefined" && window.innerWidth < 768}
       />
