@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { LandmarkImage } from "./LandmarkImage";
 
 type Landmark = {
   id: number;
@@ -19,52 +20,13 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
   onClose,
   landmark,
 }) => {
-  const [isImageLoading, setIsImageLoading] = useState(true);
-  const [imgError, setImgError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [imgFailed, setImgFailed] = useState(false);
 
   React.useEffect(() => {
-    setIsImageLoading(true);
-    setImgError(false);
-    setErrorMsg(null);
+    setImgFailed(false);
   }, [landmark, open]);
 
   if (!open || !landmark) return null;
-
-  // Add more logging for debugging
-  const imgSrc = landmark.image ?? "";
-  const encodedImageSrc = encodeURI(imgSrc);
-
-  const handleImgError = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
-    setImgError(true);
-    setErrorMsg(
-      `Could not load (len=${imgSrc.length}): "${imgSrc}"\nEncoded: "${encodedImageSrc}"\nSee console for details.`
-    );
-    console.log("[LANDMARK MODAL] IMAGE ERROR", {
-      name: landmark.name,
-      raw: imgSrc,
-      encoded: encodedImageSrc,
-      rawLen: imgSrc.length,
-      encodedLen: encodedImageSrc.length,
-      e,
-    });
-    e.currentTarget.src = "/placeholder.svg";
-  };
-
-  const handleImgLoad = (
-    e: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
-    setIsImageLoading(false);
-    setErrorMsg(null);
-    console.log(
-      "[LANDMARK MODAL] IMAGE LOADED",
-      landmark.name,
-      encodedImageSrc,
-      e
-    );
-  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -77,53 +39,21 @@ export const LandmarkModal: React.FC<LandmarkModalProps> = ({
           &times;
         </button>
         <div className="aspect-[5/4] w-full rounded-lg overflow-hidden flex items-center justify-center mb-3 bg-gray-200 relative">
-          {/* Skeleton Loader */}
-          {landmark.image && !imgError ? (
-            <>
-              {isImageLoading && (
-                <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gray-300 animate-pulse z-0">
-                  <span className="text-xs text-gray-400">Loading...</span>
-                </div>
-              )}
-              <img
-                src={encodedImageSrc}
-                alt={landmark.name}
-                className={`object-contain object-center w-full h-full select-none rounded-lg transition border-2 ${
-                  imgError
-                    ? "border-red-400"
-                    : isImageLoading
-                      ? "border-yellow-400"
-                      : "border-green-300"
-                }`}
-                loading="lazy"
-                draggable={false}
-                style={{
-                  maxHeight: 300,
-                  maxWidth: "100%",
-                  zIndex: 1,
-                  background: "transparent",
-                  margin: "auto",
-                  display: "block",
-                }}
-                onLoad={handleImgLoad}
-                onError={handleImgError}
-              />
-            </>
-          ) : (
-            <img
-              src="/placeholder.svg"
-              alt="Placeholder"
-              className="object-contain w-4/5 h-4/5 opacity-60"
-              draggable={false}
-              style={{ maxHeight: 220, margin: "auto", display: "block" }}
-            />
-          )}
-          {/* Show error msg for debugging */}
-          {errorMsg && (
-            <div className="absolute bottom-2 left-2 right-2 bg-red-50 text-red-700 px-2 py-1 rounded text-xs text-center shadow whitespace-pre-wrap">
-              {errorMsg}
-            </div>
-          )}
+          <LandmarkImage
+            imageUrl={landmark.image}
+            alt={landmark.name}
+            className="object-contain object-center w-full h-full select-none rounded-lg"
+            style={{
+              maxHeight: 300,
+              maxWidth: "100%",
+              zIndex: 1,
+              background: "transparent",
+              margin: "auto",
+              display: "block",
+            }}
+            onFallback={() => setImgFailed(true)}
+            retryLabel="Trying fallback…"
+          />
         </div>
         <h2 className="font-bold text-2xl text-indigo-900 mb-2 text-center">
           {landmark.name}
