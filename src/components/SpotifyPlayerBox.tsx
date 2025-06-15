@@ -1,5 +1,6 @@
+
 import React, { useRef, useState } from "react";
-import { Play, Stop, Music } from "lucide-react";
+import { Play, Music, Icon } from "lucide-react";
 
 const SPOTIFY_EMBED_URL =
   "https://open.spotify.com/embed/track/2gmWJA9oF4GD2Vw5QoRqu1?utm_source=generator&theme=0";
@@ -56,7 +57,7 @@ export const SpotifyPlayerBox: React.FC = () => {
           disabled={!isPlaying}
           title="Stop Music"
         >
-          <Stop size={20} className="mr-1" />
+          <Icon name="stop" size={20} className="mr-1" />
           Stop
         </button>
       </div>
