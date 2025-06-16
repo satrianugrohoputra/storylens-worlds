@@ -22,7 +22,7 @@ Galeri grid berisi:
 
 ### 🗺️ Cosmic Compass
 Peta interaktif dunia nyata:
-- Landmark terkenal dunia (7 Keajaiban Dunia, Eiffel, Louvre, NYC, Pantai & Gunung indah)
+- Landmark terkenal dunia (15 Keajaiban Dunia, Eiffel, Louvre, NYC, Pantai & Gunung indah, dan spot wisata indah lainnya)
 - Klik titik lokasi untuk menampilkan foto & informasi
 - Progress bar jumlah landmark yang sudah dikunjungi/unlocked
 
